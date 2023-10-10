@@ -12,7 +12,7 @@ pipeline {
         stage('Install Composer') {
             steps {
                 // Langkah ini akan menginstal Composer
-                sh 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
+                sh 'sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
             }
         }
         
