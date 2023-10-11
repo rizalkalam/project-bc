@@ -1,28 +1,38 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
-                // Langkah ini akan mengambil kode dari repositori Git
                 checkout scm
             }
         }
-        
-        stage('Install Composer') {
+
+        stage('Build and Test') {
             steps {
-                // Langkah ini akan menginstal Composer
-                sh 'sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer'
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                // Langkah ini akan menjalankan 'composer install' untuk menginstal semua dependencies Laravel
                 sh 'composer install'
+                sh 'php artisan test'
             }
         }
-        
-        // Tambahkan langkah-langkah lain sesuai dengan kebutuhan proyek Anda
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def dockerImage = docker.build("my-laravel-app")
+                }
+            }
+        }
+
+        stage('Deploy to Docker') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Deploy Nginx') {
+            steps {
+                sh 'docker-compose -f nginx/docker-compose.yml up -d'
+            }
+        }
     }
 }
