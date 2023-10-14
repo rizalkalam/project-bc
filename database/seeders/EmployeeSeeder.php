@@ -22,13 +22,13 @@ class EmployeeSeeder extends Seeder
             'password'=>'master123',
         ]);
 
-        // Employee::create([
-        //     'id'=>1,
-        //     'name'=>'Ari Wirasto',
-        //     'emp_id'=>196012231983031002,
-        //     'rank'=>'Penata Tk.1',
-        //     'gol_room'=>'III/D',
-        //     'position'=>'Kepala Kantor'
-        // ]);
+        Employee::create([
+            'id'=>1,
+            'name'=>'Ari Wirasto',
+            'emp_id'=>196012231983031002,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Kepala Kantor'
+        ]);
     }
 }

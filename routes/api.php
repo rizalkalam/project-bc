@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\AuthController;
 use App\Http\Controllers\Client\EmployeeController;
+use App\Http\Controllers\Client\AssignmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +27,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    //employees
     Route::get('/employee', [EmployeeController::class, 'index']);
     Route::post('/add', [EmployeeController::class, 'add']);
     Route::post('/edit/{id}', [EmployeeController::class, 'edit']);
     Route::delete('/delete/{id}', [EmployeeController::class, 'delete']);
+
+    //assignment
+    Route::get('/assignment', [AssignmentController::class, 'index']);
 
     //import employees
     Route::get('/file-import',[EmployeeController::class, 'importView'])->name('import-view');
