@@ -27,17 +27,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-
     //employees
-    Route::get('/employee', [EmployeeController::class, 'index']);
-    Route::post('/add', [EmployeeController::class, 'add']);
-    Route::post('/edit/{id}', [EmployeeController::class, 'edit']);
-    Route::delete('/delete/{id}', [EmployeeController::class, 'delete']);
+    Route::group(['prefix'=>'employee'], function () {
+        Route::get('/data', [EmployeeController::class, 'index']);
+        Route::post('/add', [EmployeeController::class, 'add']);
+        Route::post('/edit/{id}', [EmployeeController::class, 'edit']);
+        Route::delete('/delete/{id}', [EmployeeController::class, 'delete']);
+
+        //import employees
+        Route::get('/file-import',[EmployeeController::class, 'importView'])->name('import-view');
+        Route::post('/import',[EmployeeController::class, 'import'])->name('import');
+    });
 
     //assignment
-    Route::get('/assignment', [AssignmentController::class, 'index']);
+    Route::group(['prefix'=>'assignment'], function () {
+        Route::get('/data', [AssignmentController::class, 'index']);
+        Route::get('/backup', [AssignmentController::class, 'data_backup']);
+        Route::post('/create', [AssignmentController::class, 'create']);
+    });
 
-    //import employees
-    Route::get('/file-import',[EmployeeController::class, 'importView'])->name('import-view');
-    Route::post('/import',[EmployeeController::class, 'import'])->name('import');
+
+    
 });
