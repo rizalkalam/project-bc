@@ -215,16 +215,12 @@ class AssignmentController extends Controller
 
     public function delete($id)
     {
-            DB::transaction(function () use ($id) {
-                $assignment = Assignment::where('id', $id)->first();
-                $assignment->delete();
-                $backup = Backup::where('id', $id)->first();
-                $backup->delete();
-            });
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'Data Assignment deleted',
-            ]);
+        $assignment = Assignment::where('id', $id)->first();
+        $assignment->delete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Assignment deleted',
+        ]);
     }
 }
