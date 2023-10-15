@@ -44,6 +44,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/data', [AssignmentController::class, 'index']);
         Route::get('/backup', [AssignmentController::class, 'data_backup']);
         Route::post('/create', [AssignmentController::class, 'create']);
+        Route::post('/edit/{id}', [AssignmentController::class, 'edit']);
+        Route::delete('/delete/{id}', [AssignmentController::class, 'delete']);
     });
 
 
