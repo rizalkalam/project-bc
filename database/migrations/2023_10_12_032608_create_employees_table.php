@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('emp_id');
+            $table->bigInteger('emp_id');
             // $table->string('password');
             $table->string('rank');//untuk data pangkat
             $table->string('gol_room');

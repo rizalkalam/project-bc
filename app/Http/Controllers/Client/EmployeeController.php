@@ -53,7 +53,7 @@ class EmployeeController extends Controller
                 'message' => 'Success',
                 'data' => $data,
                 // 'percakapan' => $percakapan
-            ]);   
+            ], 200);   
             
         } catch (\Throwable $th) {
             //throw $th;

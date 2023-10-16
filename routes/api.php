@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Client\AuthController;
+use App\Http\Controllers\Client\PrintController;
 use App\Http\Controllers\Client\EmployeeController;
 use App\Http\Controllers\Client\AssignmentController;
 
@@ -46,7 +47,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create', [AssignmentController::class, 'create']);
         Route::post('/edit/{id}', [AssignmentController::class, 'edit']);
         Route::delete('/delete/{id}', [AssignmentController::class, 'delete']);
+
+        Route::get('/printspd/{id}', [PrintController::class, 'print_spd']);
+        
     });
+
+    // Route::get('/generate-docx', [PrintController::class, 'print_spd']);
 
 
     
