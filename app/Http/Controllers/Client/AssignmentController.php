@@ -13,7 +13,7 @@ class AssignmentController extends Controller
 {
     public function index()
     {
-        $data = Assignment::join('employees', 'employees.id', 'assignments.employee_id')
+        $data = Assignment::join('users', 'users.id', 'assignments.employee_id')
         ->join('units', 'units.id', 'assignments.unit_id')
         ->join('transportations', 'transportations.id', 'assignments.transportation_id')
         ->select([
@@ -22,7 +22,7 @@ class AssignmentController extends Controller
             'assignments.implementation_tasks',
             'assignments.no_st',
             'assignments.date_st',
-            'employees.name',
+            'users.name',
             'assignments.business_trip_reason'
         ])
         ->get();
@@ -35,7 +35,7 @@ class AssignmentController extends Controller
 
     public function data_backup()
     {
-        $data = Backup::join('employees', 'employees.id', 'backups.employee_id')
+        $data = Backup::join('users', 'users.id', 'backups.employee_id')
         ->join('units', 'units.id', 'backups.unit_id')
         ->join('transportations', 'transportations.id', 'backups.transportation_id')
         ->select([
@@ -44,7 +44,7 @@ class AssignmentController extends Controller
             'backups.implementation_tasks',
             'backups.no_st',
             'backups.date_st',
-            'employees.name',
+            'users.name',
             'backups.business_trip_reason'
         ])
         ->get();

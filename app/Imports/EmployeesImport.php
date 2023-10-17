@@ -28,7 +28,7 @@ class EmployeesImport implements ToCollection, WithValidation, WithStartRow
     {
         return [
             '*.0' => 'required',
-            '*.1' => 'required|unique:employees,emp_id',
+            '*.1' => 'required|unique:users,emp_id',
             '*.2' => 'required',
             '*.3' => 'required',
             '*.4' => 'required',

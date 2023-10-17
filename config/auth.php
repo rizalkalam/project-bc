@@ -40,7 +40,22 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [ // Guard "api" untuk otentikasi API
+            'driver' => 'sanctum', // Sesuaikan dengan driver yang sesuai
+            'provider' => 'users', // Sesuaikan dengan nama provider yang sesuai
+        ],
+    
+        'employee' => [ // Guard "employee"
+            'driver' => 'sanctum', // Sesuaikan dengan driver yang sesuai
+            'provider' => 'employees', // Sesuaikan dengan nama provider yang sesuai
+        ],
     ],
+
+    // 'api' => [
+    //     'driver' => 'sanctum',
+    //     'provider' => 'employee', // Sesuaikan dengan nama provider Pegawai
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -63,6 +78,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'employees' => [ // Provider "employees"
+            'driver' => 'eloquent',
+            'model' => App\Models\Employee::class, // Sesuaikan dengan model Pegawai yang sesuai
         ],
 
         // 'users' => [

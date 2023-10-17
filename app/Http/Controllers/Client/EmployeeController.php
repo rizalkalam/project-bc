@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Imports\EmployeesImport;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        $data = Employee::get();
+        $data = User::get();
 
         return response()->json([
             'message'=>'success',
@@ -26,7 +27,7 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name'=>'required',
-            'emp_id'=>'required|unique:employees',
+            'emp_id'=>'required|unique:users',
             'rank'=>'required',
             'gol_room'=>'required',
             'position'=>'required'
@@ -41,7 +42,7 @@ class EmployeeController extends Controller
         }
 
         try {
-            $data = Employee::create([
+            $data = User::create([
                 'name'=>$request->name,
                 'emp_id'=>$request->emp_id,
                 'rank'=>$request->rank,
@@ -68,7 +69,7 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name'=>'required',
-            'emp_id'=>'required|unique:employees,emp_id,' . $id,
+            'emp_id'=>'required|unique:users,emp_id,' . $id,
             'rank'=>'required',
             'gol_room'=>'required',
             'position'=>'required'
@@ -83,7 +84,7 @@ class EmployeeController extends Controller
         }
 
         try {
-            $employee = Employee::where('id', $id)->first();
+            $employee = User::where('id', $id)->first();
             
             $employee->update([
                 'name'=>$request->name,
@@ -108,7 +109,7 @@ class EmployeeController extends Controller
     }
 
     public function delete($id){
-        $employee = Employee::where('id', $id)->first();
+        $employee = User::where('id', $id)->first();
         $employee->delete();
 
         return response()->json([

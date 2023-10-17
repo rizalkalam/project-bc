@@ -31,13 +31,13 @@ Route::middleware('auth:sanctum')->group(function () {
     //employees
     Route::group(['prefix'=>'employee'], function () {
         Route::get('/data', [EmployeeController::class, 'index']);
-        Route::post('/add', [EmployeeController::class, 'add']);
-        Route::post('/edit/{id}', [EmployeeController::class, 'edit']);
-        Route::delete('/delete/{id}', [EmployeeController::class, 'delete']);
+        Route::post('/add', [EmployeeController::class, 'add'])->middleware('CheckRole:master');
+        Route::post('/edit/{id}', [EmployeeController::class, 'edit'])->middleware('CheckRole:master');
+        Route::delete('/delete/{id}', [EmployeeController::class, 'delete'])->middleware('CheckRole:master');
 
         //import employees
-        Route::get('/file-import',[EmployeeController::class, 'importView'])->name('import-view');
-        Route::post('/import',[EmployeeController::class, 'import'])->name('import');
+        Route::get('/file-import',[EmployeeController::class, 'importView'])->name('import-view')->middleware('CheckRole:master');
+        Route::post('/import',[EmployeeController::class, 'import'])->name('import')->middleware('CheckRole:master');
     });
 
     //assignment
@@ -51,9 +51,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/printspd/{id}', [PrintController::class, 'print_spd']);
         
     });
-
-    // Route::get('/generate-docx', [PrintController::class, 'print_spd']);
-
-
-    
 });
