@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Imports\EmployeesImport;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
@@ -15,10 +16,20 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $data = User::get();
+        $employeeRole = Role::where('name', 'employee')->first();
+
+        if ($employeeRole) {
+            $data = User::whereHas('roles', function ($query) use ($employeeRole) {
+                $query->where('id', $employeeRole->id);
+            })->get();
+            return response()->json([
+                'message'=>'success',
+                'data'=>$data
+            ]);
+        }
 
         return response()->json([
-            'message'=>'success',
+            'message'=>'failed',
             'data'=>$data
         ]);
     }

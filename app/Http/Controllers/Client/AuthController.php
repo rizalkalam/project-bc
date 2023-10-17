@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -23,10 +24,20 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $employeeRole = Role::where('name', 'employee')->first();
+        if ($employeeRole) {
+            return response()->json([
+                'message' => 'Login success',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role'=>'employee',
+            ]);
+        }
         return response()->json([
             'message' => 'Login success',
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
+            'role'=>'master'
         ]);
 
     }
