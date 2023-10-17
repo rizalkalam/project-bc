@@ -24,20 +24,20 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $employeeRole = Role::where('name', 'employee')->first();
-        if ($employeeRole) {
+        $user = auth()->user()->name;
+        if ($user == 'master') {
             return response()->json([
                 'message' => 'Login success',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'role'=>'employee',
+                'role'=>'master',
             ]);
-        }
+        } 
         return response()->json([
             'message' => 'Login success',
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'role'=>'master'
+            'role'=>'employee',
         ]);
 
     }
