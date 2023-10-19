@@ -11,17 +11,32 @@ use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\EmployeeListResource;
 
 class EmployeeController extends Controller
 {
     public function index()
     {
-        $employeeRole = Role::where('name', 'employee')->first();
+        $employeeRole = Role::where('name', 'biasa')->first();
+        $officerRole = Role::where('name', 'ppk')->first();
 
         if ($employeeRole) {
-            $data = User::whereHas('roles', function ($query) use ($employeeRole) {
+            $user = User::whereHas('roles', function ($query) use ($employeeRole, $officerRole) {
                 $query->where('id', $employeeRole->id);
-            })->get();
+                $query->orWhere('id', $officerRole->id);
+            })
+            ->with('roles:name')
+            ->select([
+                'users.id',
+                'users.name',
+                'users.emp_id',
+                'users.rank',
+                'users.gol_room',
+                'users.position',
+            ])->get();
+
+            $data = EmployeeListResource::collection($user);
+
             return response()->json([
                 'message'=>'success',
                 'data'=>$data
@@ -41,7 +56,10 @@ class EmployeeController extends Controller
             'emp_id'=>'required|unique:users',
             'rank'=>'required',
             'gol_room'=>'required',
-            'position'=>'required'
+            'position'=>'required',
+            // 'email'=>'nullable',
+            'password'=>'nullable',
+            'role'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -58,8 +76,12 @@ class EmployeeController extends Controller
                 'emp_id'=>$request->emp_id,
                 'rank'=>$request->rank,
                 'gol_room'=>$request->gol_room,
-                'position'=>$request->position
+                'position'=>$request->position,
+                // 'email'=>$request->email,
+                'password'=>$request->password
             ]);
+
+            $data->assignRole($request->role);
 
             return response()->json([
                 'message' => 'Success',
@@ -83,7 +105,8 @@ class EmployeeController extends Controller
             'emp_id'=>'required|unique:users,emp_id,' . $id,
             'rank'=>'required',
             'gol_room'=>'required',
-            'position'=>'required'
+            'position'=>'required',
+            'role'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +127,8 @@ class EmployeeController extends Controller
                 'gol_room'=>$request->gol_room,
                 'position'=>$request->position
             ]);
+
+            $employee->assignRole($request->role);
 
             return response()->json([
                 'message' => 'Success',
@@ -135,15 +160,31 @@ class EmployeeController extends Controller
     }
 
     public function import(Request $request){
-        // Excel::import(new ImportGuru,
-        //               $request->file('file')->store('file_data'));
-        // return redirect()->back();
-
-        Excel::import(new EmployeesImport, $request->file('file')->store('file_data'));
-
-        return response()->json([
-            'success' => true,
-            'message' => 'berhasil import data'
+        $validator = Validator::make($request->all(),[
+            'file'=> 'required|mimes:xls,xlsx'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+                'data' => [],
+            ], 400);
+        }
+
+        try {
+            Excel::import(new EmployeesImport, $request->file('file')->store('file_data'));
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mengimpor data.'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'message' => 'failed',
+                'errors' => $th->getMessage(),
+            ], 400);
+        }     
     }
 }

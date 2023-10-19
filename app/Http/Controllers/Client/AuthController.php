@@ -24,21 +24,27 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $user = auth()->user()->name;
-        if ($user == 'master') {
+        $userA = Auth::user();
+        $roleName = $userA->getRoleNames()->first();
+
+        if ($roleName == 'master') {
             return response()->json([
                 'message' => 'Login success',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'role'=>'master',
+                'role'=>$roleName,
             ]);
-        } 
+        } elseif ($roleName == 'ppk') {
+            return response()->json([
+                'message' => 'Login success',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role'=>$roleName,
+            ]);
+        }
         return response()->json([
-            'message' => 'Login success',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'role'=>'employee',
-        ]);
+            'message' => 'Access denied',
+        ], 403);
 
     }
 

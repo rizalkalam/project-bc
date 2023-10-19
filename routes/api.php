@@ -50,5 +50,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/printspd/{id}', [PrintController::class, 'print_spd']);
         
-    });
+    })->middleware('CheckRole:ppk, master');
 });

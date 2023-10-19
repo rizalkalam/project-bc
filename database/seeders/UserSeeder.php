@@ -16,8 +16,8 @@ class UserSeeder extends Seeder
     {
         //create_role
         Role::create(['name' => 'master']);
-        Role::create(['name' => 'employee']);
-        Role::create(['name' => 'viewer']);
+        Role::create(['name' => 'biasa']);
+        Role::create(['name' => 'ppk']);
 
         $master = User::create([
             'id'=>1,
@@ -30,7 +30,9 @@ class UserSeeder extends Seeder
             'position'=>'master'
         ]);
 
-        $employee = User::create([
+        $master->assignRole('master');
+
+        $officer = User::create([
             'id'=>2,
             'name'=>'Ari Wirasto',
             'email'=>'ari171@gmail.com',
@@ -41,7 +43,32 @@ class UserSeeder extends Seeder
             'position'=>'Kepala Kantor'
         ]);
 
-        $employee->assignRole('employee');
-        $master->assignRole('master');
+        $officer->assignRole('ppk');
+
+        $officer = User::create([
+            'id'=>3,
+            'name'=>'Bambang Setiawan',
+            'email'=>'bambang@gmail.com',
+            'password'=>'bambang',
+            'emp_id'=>196012231983031999,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Kepala Kantor'
+        ]);
+
+        $officer->assignRole('ppk');
+
+        $employee = User::create([
+            'id'=>4,
+            'name'=>'Galang Jati Saka',
+            'email'=>'galang@gmail.com',
+            'password'=>'galang',
+            'emp_id'=>19601223198307,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Kepala Kantor'
+        ]);
+
+        $employee->assignRole('biasa');
     }
 }

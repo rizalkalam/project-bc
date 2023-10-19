@@ -16,7 +16,7 @@ class AssignmentSeeder extends Seeder
     {
         $data = [
                 'id'=>1,
-                'employee_id'=>1,
+                'employee_id'=>2,
                 'unit_id'=>1,
                 'ndreq_st'=>'ND-123/2023',
                 'no_st'=>'555',

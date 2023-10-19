@@ -16,11 +16,13 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (Auth::check() && Auth::user()->hasAnyRole($roles)) {
+        if (!Auth::check() ) {
+            return response()->json(['message' => 'Akses ditolak'], 403);
+        } elseif (Auth::user()->hasAnyRole($roles)) {
             return $next($request);
         }
 
-        return response()->json(['message' => 'Akses ditolak'], 403);
+        // return response()->json(['message' => 'Akses ditolak'], 403);
     }
     }
 
