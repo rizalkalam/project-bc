@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('backups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->nullable();
-            $table->foreignId('unit_id');//UMUM, P2, PERBEN, PKC, KIP
+            $table->string('user_id')->nullable();
+            $table->string('input_name');
+            // $table->foreignId('unit_id');//UMUM, P2, PERBEN, PKC, KIP
+            $table->string('kk_name');
+            $table->string('unit');
             $table->string('ndreq_st');
             $table->string('no_st');
+            $table->string('nomor_st');
             $table->date('date_st');
             $table->string('no_spd');
             $table->date('date_spd');
@@ -24,7 +28,10 @@ return new class extends Migration
             $table->date('return_date');
             $table->string('dipa_search');//Kantor, Kantor lain
             $table->enum('tagging_status', ['canceled', 'online'])->nullable();
+            $table->enum('plt', ['plh', 'kosong']);
             //===============
+            $table->string('disbursement');
+            $table->string('no_spyt')->nullable();
             $table->string('implementation_tasks');
             $table->string('business_trip_reason');
             $table->string('destination_office');
@@ -32,7 +39,7 @@ return new class extends Migration
             $table->string('destination_city_1');
             $table->string('destination_city_2')->nullable();
             $table->string('destination_city_3')->nullable();
-            $table->foreignId('transportation_id');//Kendaraan umum, Kendaraan dinas
+            $table->string('transportation');//Kendaraan umum, Kendaraan dinas
             $table->string('signature');
             $table->timestamps();
         });

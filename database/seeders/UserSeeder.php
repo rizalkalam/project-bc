@@ -63,7 +63,7 @@ class UserSeeder extends Seeder
             'name'=>'Galang Jati Saka',
             'email'=>'galang@gmail.com',
             'password'=>'galang',
-            'emp_id'=>19601223198307,
+            'emp_id'=>196012231983077571,
             'rank'=>'Penata Tk.1',
             'gol_room'=>'III/D',
             'position'=>'Kepala Kantor'

@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //employees
     Route::group(['prefix'=>'employee'], function () {
         Route::get('/data', [EmployeeController::class, 'index']);
+        Route::get('/detail/{id}', [EmployeeController::class, 'detail']);
         Route::post('/add', [EmployeeController::class, 'add'])->middleware('CheckRole:master');
         Route::post('/edit/{id}', [EmployeeController::class, 'edit'])->middleware('CheckRole:master');
         Route::delete('/delete/{id}', [EmployeeController::class, 'delete'])->middleware('CheckRole:master');
@@ -43,12 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
     //assignment
     Route::group(['prefix'=>'assignment'], function () {
         Route::get('/data', [AssignmentController::class, 'index']);
+        Route::get('/ppk', [AssignmentController::class, 'show_ppk']);
         Route::get('/backup', [AssignmentController::class, 'data_backup']);
         Route::post('/create', [AssignmentController::class, 'create']);
         Route::post('/edit/{id}', [AssignmentController::class, 'edit']);
         Route::delete('/delete/{id}', [AssignmentController::class, 'delete']);
 
-        Route::get('/printspd/{id}', [PrintController::class, 'print_spd']);
+        Route::get('/printspd/{no_st}', [PrintController::class, 'print_spd']);
+        Route::get('/printst/{no_st}', [PrintController::class, 'print_st']);
         
     })->middleware('CheckRole:ppk, master');
 });

@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\EmployeeListResource;
+use App\Http\Resources\EmployeeDetailResource;
 
 class EmployeeController extends Controller
 {
@@ -45,6 +46,36 @@ class EmployeeController extends Controller
 
         return response()->json([
             'message'=>'failed',
+            'data'=>$data
+        ]);
+    }
+
+    public function detail($id)
+    {
+        $employeeRole = Role::where('name', 'biasa')->first();
+        $officerRole = Role::where('name', 'ppk')->first();
+
+            if ($employeeRole) {
+                $employee = User::whereHas('roles', function ($query) use ($employeeRole, $officerRole) {
+                    $query->where('id', $employeeRole->id);
+                    $query->orWhere('id', $officerRole->id);
+                })
+                ->where('id', $id)
+                ->with('roles:name')
+                ->select([
+                    'users.id',
+                    'users.name',
+                    'users.emp_id',
+                    'users.rank',
+                    'users.gol_room',
+                    'users.position',
+                ])->get();
+            }
+
+        $data = EmployeeDetailResource::collection($employee);
+
+        return response()->json([
+            'message'=>'success',
             'data'=>$data
         ]);
     }
@@ -102,7 +133,7 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name'=>'required',
-            'emp_id'=>'required|unique:users,emp_id,' . $id,
+            'emp_id'=>'required|unique:users,id,' . $id,
             'rank'=>'required',
             'gol_room'=>'required',
             'position'=>'required',
@@ -118,21 +149,49 @@ class EmployeeController extends Controller
         }
 
         try {
-            $employee = User::where('id', $id)->first();
+            // $employee = User::where('id', $id)->first();
             
-            $employee->update([
-                'name'=>$request->name,
-                'emp_id'=>$request->emp_id,
-                'rank'=>$request->rank,
-                'gol_room'=>$request->gol_room,
-                'position'=>$request->position
-            ]);
+            $employeeRole = Role::where('name', 'biasa')->first();
+            $officerRole = Role::where('name', 'ppk')->first();
 
-            $employee->assignRole($request->role);
+            if ($employeeRole) {
+                $employee = User::whereHas('roles', function ($query) use ($employeeRole, $officerRole) {
+                    $query->where('id', $employeeRole->id);
+                    $query->orWhere('id', $officerRole->id);
+                })
+                ->with('roles:name')
+                ->where('id', $id)
+                ->select([
+                    'users.id',
+                    'users.name',
+                    'users.emp_id',
+                    'users.rank',
+                    'users.gol_room',
+                    'users.position',
+                ])->first();
+                }
+
+                $role = $employee->roles()->first()->name;
+            
+                $employee->update([
+                    'name'=>$request->name,
+                    'emp_id'=>$request->emp_id,
+                    'rank'=>$request->rank,
+                    'gol_room'=>$request->gol_room,
+                    'position'=>$request->position
+                ]);
+
+                $newRole = Role::where('name', $role);
+                if (!$newRole) {
+                    return response()->json(['message' => 'Peran baru tidak ditemukan'], 404);
+                }
+
+                $rolesToAssign = [$newRole]; 
+                $employee->syncRoles($request->role);
 
             return response()->json([
                 'message' => 'Success',
-                'data' => $employee
+                'data' => $employee,
             ], 200);
 
         } catch (\Throwable $th) {

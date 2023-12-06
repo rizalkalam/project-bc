@@ -34,4 +34,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+     // Contoh metode untuk menetapkan peran pada pengguna
+     public function assignUserRole($roleName)
+     {
+         $this->assignRole($roleName);
+     }
 }
