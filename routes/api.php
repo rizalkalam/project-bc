@@ -44,7 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //assignment
     Route::group(['prefix'=>'assignment'], function () {
         Route::get('/data', [AssignmentController::class, 'index']);
+        Route::get('/detail/{id}', [AssignmentController::class, 'show_assignment']);
         Route::get('/ppk', [AssignmentController::class, 'show_ppk']);
+        Route::get('/nonplh', [AssignmentController::class, 'show_nonplh']);
         Route::get('/backup', [AssignmentController::class, 'data_backup']);
         Route::post('/create', [AssignmentController::class, 'create']);
         Route::post('/edit/{id}', [AssignmentController::class, 'edit']);

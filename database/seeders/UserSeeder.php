@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             'emp_id'=>196012231983031002,
             'rank'=>'Penata Tk.1',
             'gol_room'=>'III/D',
-            'position'=>'Kepala Kantor'
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
         ]);
 
         $officer->assignRole('ppk');
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             'emp_id'=>196012231983031999,
             'rank'=>'Penata Tk.1',
             'gol_room'=>'III/D',
-            'position'=>'Kepala Kantor'
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
         ]);
 
         $officer->assignRole('ppk');
@@ -66,7 +66,20 @@ class UserSeeder extends Seeder
             'emp_id'=>196012231983077571,
             'rank'=>'Penata Tk.1',
             'gol_room'=>'III/D',
-            'position'=>'Kepala Kantor'
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
+        ]);
+
+        $employee->assignRole('biasa');
+
+        $employee = User::create([
+            'id'=>5,
+            'name'=>'Mustofa Irsal',
+            'email'=>'irsal@gmail.com',
+            'password'=>'irsal',
+            'emp_id'=>196012232688131276,
+            'rank'=>'Pembina Tk.I',
+            'gol_room'=>'IV/b',
+            'position'=>'Kepala KPPBC TMC Kudus'
         ]);
 
         $employee->assignRole('biasa');

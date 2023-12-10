@@ -13,34 +13,37 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('input_name'); // data dari user hanya dengan role ppk
+            $table->foreignId('user_id')->nullable(); // data dari pegawai
+            $table->foreignId('ppk')->nullable(); // data dari user hanya dengan role ppk
+            $table->foreignId('head_officer')->nullable();
             // $table->foreignId('unit_id');//UMUM, P2, PERBEN, PKC, KIP
-            $table->string('kk_name');
-            $table->string('unit');
-            $table->string('ndreq_st');
-            $table->string('no_st');
-            $table->string('nomor_st');
-            $table->date('date_st');
-            $table->string('no_spd');
-            $table->date('date_spd');
-            $table->date('departure_date');
-            $table->date('return_date');
-            $table->string('dipa_search');//Kantor, Kantor lain
+            $table->string('unit')->nullable();
+            $table->string('ndreq_st')->nullable();
+            $table->string('no_st')->nullable();
+            $table->string('nomor_st')->nullable();
+            $table->date('date_st')->nullable();
+            $table->string('no_spd')->nullable();
+            $table->date('date_spd')->nullable();
+            $table->date('departure_date')->nullable();
+            $table->date('return_date')->nullable();
+            $table->string('dipa_search')->nullable();//Kantor, Kantor lain
             $table->enum('tagging_status', ['canceled', 'online'])->nullable();
-            $table->enum('plt', ['plh', 'kosong']);
+            $table->enum('plt', ['plh', 'kosong'])->nullable();
+            $table->string('plh');
             //===============
-            $table->string('disbursement');
+            $table->string('disbursement')->nullable();
             $table->string('no_spyt')->nullable();
-            $table->string('implementation_tasks');
-            $table->string('business_trip_reason');
-            $table->string('destination_office');
-            $table->string('city_origin');
-            $table->string('destination_city_1');
+            $table->string('implementation_tasks')->nullable();
+            $table->string('business_trip_reason')->nullable();
+            $table->string('destination_office')->nullable();
+            $table->string('city_origin')->nullable();
+            $table->string('destination_city_1')->nullable();
             $table->string('destination_city_2')->nullable();
             $table->string('destination_city_3')->nullable();
-            $table->string('transportation');//Kendaraan umum, Kendaraan dinas
-            $table->string('signature');
+            $table->string('destination_city_4')->nullable();
+            $table->string('destination_city_5')->nullable();
+            $table->string('transportation')->nullable();//Kendaraan umum, Kendaraan dinas
+            $table->string('signature')->nullable();
             $table->timestamps();
         });
     }
