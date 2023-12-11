@@ -81,11 +81,11 @@ class PrintController extends Controller
                     'helperPlh'=>$key->plh,
                     'namaPej'=>$key->namaPej,
                     'nipPej'=>$key->nipPej,
-                    'kotaTujuanI'=>$key->destination_city_1,
-                    'kotaTujuanII'=>$key->destination_city_2,
-                    'kotaTujuanIII'=>$key->destination_city_3,
-                    'kotaTujuanIV'=>$key->destination_city_4,
-                    'kotaTujuanV'=>$key->destination_city_5,
+                    'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->kota_tujuan_tugas_1 : '',
+                    'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->kota_tujuan_tugas_2 : '',
+                    'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->kota_tujuan_tugas_3 : '',
+                    'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->kota_tujuan_tugas_4 : '',
+                    'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->kota_tujuan_tugas_5 : '',
                 ];
                 // $template->setValues($dataValue);
         
@@ -160,15 +160,15 @@ class PrintController extends Controller
                 'stPjg'=>$key->no_st,
                 'nipPpk'=>$key->nip_ppk,
                 'jenisKendaraan'=>$key->transportation_name,
-                'kotaTujuan'=>$key->destination_city_1,
+                'kotaTujuan'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
                 'helperPlh'=>$key->plh,
                 'namaPej'=>$key->namaPej,
                 'nipPej'=>$key->nipPej,
-                'kotaTujuanI'=>$key->destination_city_1,
-                'kotaTujuanII'=>$key->destination_city_2,
-                'kotaTujuanIII'=>$key->destination_city_3,
-                'kotaTujuanIV'=>$key->destination_city_4,
-                'kotaTujuanV'=>$key->destination_city_5,
+                'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
+                'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->destination_city_2 : '',
+                'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
+                'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
+                'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
             ];
         }
 
