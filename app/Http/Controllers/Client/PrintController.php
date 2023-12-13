@@ -18,12 +18,12 @@ use PhpOffice\PhpWord\TemplateProcessor;
 
 class PrintController extends Controller
 {
-    public function print_spd($no_st)
+    public function print_spd($nomor_identitas)
     {
         $data = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-        ->where('assignments.no_st', $no_st)
+        ->where('assignments.identity_number', $nomor_identitas)
         ->select([
             'assignments.*',
             'users.name as employee',
@@ -40,8 +40,6 @@ class PrintController extends Controller
 
         $countId = $data->count();
 
-        if ($countId > 1) {
-            // Create a temporary directory to store individual documents
             $tempDir = storage_path('app/temp_docx/');
             if (!file_exists($tempDir)) {
                 mkdir($tempDir, 0755, true);
@@ -127,74 +125,14 @@ class PrintController extends Controller
             } else {
                 return response()->json(['message' => 'Failed to create ZIP archive'], 500);
             }
-        }
-
-        // Load the template file
-        $template = new TemplateProcessor(storage_path('app/template_spd.docx'));
-
-        foreach ($data as $key) {
-            $startDate = Carbon::parse($key->departure_date);
-            $endDate = Carbon::parse($key->return_date);
-            $duration = $startDate->diffInDays($endDate);
-
-            $tglSpd = Carbon::parse($key->date_spd)->format('d F Y');
-            $tglBerangkat = Carbon::parse($key->departure_date)->format('d F Y');
-            $tglKembali = Carbon::parse($key->return_date)->format('d F Y');
-
-            $dataValue = [
-                'spdPjg'=>$key->no_spd,
-                'namaPpk'=>$key->ppk,
-                'namaPeg'=>$key->employee,
-                'nipPeg'=>$key->nip_peg,
-                'pangkatPeg'=>$key->pangkatPeg,
-                'jabPeg'=>$key->jabPeg,
-                'golPeg'=>$key->golPeg,
-                'maksudPd'=>$key->businesss_trip_reason,
-                'kotaAsal1'=>$key->city_origin,
-                'lamaTugas'=> $duration,
-                'tglSpd'=>$tglSpd,
-                'tglBerangkat'=>$tglBerangkat,
-                'tglKembali'=>$tglKembali,
-                'pencairan'=>$key->dipa_search,
-                'akun'=>'tes-keydummy',
-                'stPjg'=>$key->no_st,
-                'nipPpk'=>$key->nip_ppk,
-                'jenisKendaraan'=>$key->transportation_name,
-                'kotaTujuan'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
-                'helperPlh'=>$key->plh,
-                'namaPej'=>$key->namaPej,
-                'nipPej'=>$key->nipPej,
-                'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
-                'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->destination_city_2 : '',
-                'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
-                'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
-                'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
-            ];
-        }
-
-        $template->setValues($dataValue);
-
-        // Save the modified template as a new file
-        $filename = 'print_spd' . $data->first()->employee .'.docx';
-        $template->saveAs(storage_path('app/' . $filename));
-
-        // Provide the Word document as a download with the correct headers
-        $headers = [
-            'Content-Type' => 'application/msword',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-        ];
-
-        return response()->file(storage_path('app/' . $filename), $headers)->deleteFileAfterSend(true);
-
-        
     }
 
-    public function print_st($no_st)
+    public function print_st($nomor_identitas)
     {
         $data = Assignment::join('users', 'users.id', 'assignments.user_id')
         // ->join('units', 'units.id', 'assignments.unit_id')
         // ->join('transportations', 'transportations.id', 'assignments.transportation_id')
-        ->where('assignments.no_st', $no_st)
+        ->where('assignments.identity_number', $nomor_identitas)
         ->select([
             'assignments.no_st',
             'users.name',
@@ -226,10 +164,14 @@ class PrintController extends Controller
                     'gol'=> $key->gol_room,
                 ];
             }
+
+            $assignment = Assignment::where('identity_number', $nomor_identitas)
+            ->first();
             
             $template2->cloneRowAndSetValues('n', $dataValue);
-            $template2->setValue('no', '1329/KBC.1002/2023');
-            $template2->setValue('tanggal', '10/08/2023');
+            $template2->setValue('no', $assignment->nomor_st);
+            $template2->setValue('tanggal', $assignment->date_st);
+            
 
             // Save the modified templa$template2 as a new file
             $filename = 'print_st2.docx';
@@ -237,7 +179,7 @@ class PrintController extends Controller
 
             // Provide the Word document as a download with the correct headers
             $headers = [
-                'Content-Type' => 'application/msword',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ];
 
@@ -254,10 +196,13 @@ class PrintController extends Controller
                     'gol'=> $key->gol_room,
                 ];
             }
+
+            $assignment = Assignment::where('identity_number', $nomor_identitas)
+            ->first();
             
             $template1->cloneRowAndSetValues('n', $dataValue);
-            $template1->setValue('no', '1329/KBC.1002/2023');
-            $template1->setValue('tanggal', '10/08/2023');
+            $template1->setValue('no', $assignment->nomor_st);
+            $template1->setValue('tanggal', $assignment->date_st);
 
             // Save the modified template as a new file
             $filename = 'print_st1.docx';
@@ -265,7 +210,7 @@ class PrintController extends Controller
 
             // Provide the Word document as a download with the correct headers
             $headers = [
-                'Content-Type' => 'application/msword',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'Content-Disposition' => 'attachment; filename="' . $filename . '"',
             ];
 

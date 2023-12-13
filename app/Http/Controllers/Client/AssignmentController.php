@@ -23,9 +23,12 @@ class AssignmentController extends Controller
             'assignments.*', 
             'users.name as employee',
             'ppk.name as ppk',
-            'head_officer.name as head_officer'
+            'head_officer.name as head_officer',
+            'assignments.identity_number as nomor_identitas'
         ])
         ->get();
+
+        $data->makeHidden('identity_number');
 
         return response()->json([
             'message'=>'success',
@@ -84,7 +87,19 @@ class AssignmentController extends Controller
 
     public function data_backup()
     {
-        $data = Backup::get();
+        $data = Backup::join('users', 'users.id', 'backups.user_id')
+        ->join('users as ppk', 'ppk.id', 'backups.ppk')
+        ->join('users as head_officer', 'head_officer.id', 'backups.head_officer')
+        ->select([
+            'backups.*', 
+            'users.name as employee',
+            'ppk.name as ppk',
+            'head_officer.name as head_officer',
+            'backups.identity_number as nomor_identitas'
+        ])
+        ->get();
+
+        $data->makeHidden('identity_number');
 
         return response()->json([
             'message'=>'success',
@@ -172,12 +187,13 @@ class AssignmentController extends Controller
             if ($request->plt == 'plh') {
                 $requestData = [
                     'user_id' => $request->id_pegawai,
+                    'identity_number' =>$request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $request->penanda_tangan,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y'),
+                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
                     'date_st' => $request->tanggal_st,
                     'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -206,12 +222,13 @@ class AssignmentController extends Controller
             } else {
                 $requestData = [
                     'user_id' => $request->id_pegawai,
+                    'identity_number' =>$request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $head_office->id,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y'),
+                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
                     'date_st' => $request->tanggal_st,
                     'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -277,6 +294,7 @@ class AssignmentController extends Controller
         $validator = Validator::make($request->all(),[
             'id_pegawai'=>'required',
             'id_ppk'=>'required',
+            'nomor_identitas'=>'required',
             // 'penanda_tangan'=>'required',
             'unit'=>'required',
             'no_ndpermohonan_st'=>'required',
@@ -319,6 +337,7 @@ class AssignmentController extends Controller
             if ($request->plt == 'plh') {
                 $requestData = [
                     'user_id' => $request->id_pegawai,
+                    'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $request->penanda_tangan,
                     'unit' => $request->unit,
@@ -353,6 +372,7 @@ class AssignmentController extends Controller
             } else {
                 $requestData = [
                     'user_id' => $request->id_pegawai,
+                    'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $head_office->id,
                     'unit' => $request->unit,

@@ -52,8 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/edit/{id}', [AssignmentController::class, 'edit']);
         Route::delete('/delete/{id}', [AssignmentController::class, 'delete']);
 
-        Route::get('/printspd/{no_st}', [PrintController::class, 'print_spd']);
-        Route::get('/printst/{no_st}', [PrintController::class, 'print_st']);
+        Route::get('/printspd/{nomor_identitas}', [PrintController::class, 'print_spd']);
+        Route::get('/printst/{nomor_identitas}', [PrintController::class, 'print_st']);
         
     })->middleware('CheckRole:ppk, master');
 });

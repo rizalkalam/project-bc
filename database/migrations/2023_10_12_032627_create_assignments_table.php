@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
+            $table->integer('identity_number');
             $table->foreignId('user_id')->nullable(); // data dari pegawai
             $table->foreignId('ppk')->nullable(); // data dari user hanya dengan role ppk
             $table->foreignId('head_officer')->nullable();

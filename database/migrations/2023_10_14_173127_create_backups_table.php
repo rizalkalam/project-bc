@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('backups', function (Blueprint $table) {
             $table->id();
+            $table->integer('identity_number');
             $table->string('user_id')->nullable();
             $table->string('ppk')->nullable();
             $table->string('head_officer')->nullable();

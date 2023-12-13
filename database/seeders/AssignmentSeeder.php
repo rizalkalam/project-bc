@@ -18,6 +18,7 @@ class AssignmentSeeder extends Seeder
         $data = [
             [
                 'id'=>1,
+                'identity_number'=>123,
                 'user_id'=>2,
                 'ppk'=>3,
                 'head_officer'=>5,
@@ -53,6 +54,7 @@ class AssignmentSeeder extends Seeder
             
             [
                 'id'=>2,
+                'identity_number'=>234,
                 'user_id'=>2,
                 'ppk'=>3,
                 'head_officer'=>5,
