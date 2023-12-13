@@ -167,11 +167,19 @@ class PrintController extends Controller
 
             $assignment = Assignment::where('identity_number', $nomor_identitas)
             ->first();
+
+            setlocale(LC_TIME, 'id_ID');
+            \Carbon\Carbon::setLocale('id');
+            $date_st = Carbon::parse($assignment->date_st)->isoFormat('D MMMM Y');
             
             $template2->cloneRowAndSetValues('n', $dataValue);
             $template2->setValue('no', $assignment->nomor_st);
-            $template2->setValue('tanggal', $assignment->date_st);
             
+            if ($assignment->date_st == null) {
+                $template1->setValue('tanggal', '[@TanggalND]');
+            } else {
+                $template1->setValue('tanggal', $date_st);
+            }
 
             // Save the modified templa$template2 as a new file
             $filename = 'print_st2.docx';
@@ -199,10 +207,20 @@ class PrintController extends Controller
 
             $assignment = Assignment::where('identity_number', $nomor_identitas)
             ->first();
+
+            setlocale(LC_TIME, 'id_ID');
+            \Carbon\Carbon::setLocale('id');
+            $date_st = Carbon::parse($assignment->date_st)->isoFormat('D MMMM Y');
             
             $template1->cloneRowAndSetValues('n', $dataValue);
             $template1->setValue('no', $assignment->nomor_st);
-            $template1->setValue('tanggal', $assignment->date_st);
+
+            if ($assignment->date_st == null) {
+                $template1->setValue('tanggal', '[@TanggalND]');
+            } else {
+                $template1->setValue('tanggal', $date_st);
+            }
+            
 
             // Save the modified template as a new file
             $filename = 'print_st1.docx';
