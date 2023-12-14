@@ -35,7 +35,7 @@ class AssignmentSeeder extends Seeder
                 'dipa_search'=>'Kantor',
                 'plt'=>'plh',
                 'plh'=>'plh',
-                // 'tagging_status'=> '',
+                'tagging_status'=> 'default',
                 //==================
                 'disbursement'=>'Kantor',
                 'no_spyt'=>'',
@@ -71,7 +71,7 @@ class AssignmentSeeder extends Seeder
                 'dipa_search'=>'Kantor',
                 'plt'=>'plh',
                 'plh'=>'plh',
-                // 'tagging_status'=> '',
+                'tagging_status'=> 'default',
                 //=================
                 'disbursement'=>'Kantor',
                 'no_spyt'=>'',

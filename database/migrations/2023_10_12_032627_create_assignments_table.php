@@ -28,7 +28,7 @@ return new class extends Migration
             $table->date('departure_date')->nullable();
             $table->date('return_date')->nullable();
             $table->string('dipa_search')->nullable();//Kantor, Kantor lain
-            $table->enum('tagging_status', ['canceled', 'online'])->nullable();
+            $table->enum('tagging_status', ['default', 'canceled', 'online'])->nullable();
             $table->enum('plt', ['plh', 'kosong'])->nullable();
             $table->string('plh');
             //===============
