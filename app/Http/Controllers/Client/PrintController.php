@@ -50,7 +50,7 @@ class PrintController extends Controller
             // Replace placeholders in the template with actual data
             foreach ($data as $key) {
                 // Load the template file
-                $template = new TemplateProcessor(storage_path('app/template_spd.docx'));
+                $templateST = new TemplateProcessor(storage_path('app/template_spd.docx'));
 
                 $startDate = Carbon::parse($key->departure_date);
                 $endDate = Carbon::parse($key->return_date);
@@ -88,11 +88,11 @@ class PrintController extends Controller
                 // $template->setValues($dataValue);
         
                 // Set values for the template
-                $template->setValues($dataValue);
+                $templateST->setValues($dataValue);
 
                 // Save the modified template as a temporary document
                 $tempFilename = $tempDir . 'spd' . $key->employee . '.docx';
-                $template->saveAs($tempFilename);
+                $templateST->saveAs($tempFilename);
                 // $template->saveAs(storage_path('app/' . $filename));
             }
 
