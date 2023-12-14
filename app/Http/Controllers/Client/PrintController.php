@@ -121,7 +121,7 @@ class PrintController extends Controller
                     'Content-Disposition' => 'attachment; filename="' . $nameZip . '"',
                 ];
 
-                return response()->download($zipFilename, $nameZip, $headers);
+                return response()->download($zipFilename, $nameZip, $headers)->deleteFileAfterSend(true);;
             } else {
                 return response()->json(['message' => 'Failed to create ZIP archive'], 500);
             }
@@ -150,8 +150,7 @@ class PrintController extends Controller
         $countId = $data->count();
 
         // Load the template file
-        $template1 = new TemplateProcessor(storage_path('app/ST-1.docx'));
-        $template2 = new TemplateProcessor(storage_path('app/ST-2.docx'));
+        $template = new TemplateProcessor(storage_path('app/template_st.docx'));
 
         if ($countId > 1) {
             foreach ($data as $key) {
@@ -165,25 +164,40 @@ class PrintController extends Controller
                 ];
             }
 
-            $assignment = Assignment::where('identity_number', $nomor_identitas)
+            $assignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+            ->where('assignments.identity_number', $nomor_identitas)
+            ->select([
+                'assignments.*', 
+                'head_officer.name as head_officer',
+                'assignments.identity_number as nomor_identitas'
+            ])
             ->first();
 
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');
             $date_st = Carbon::parse($assignment->date_st)->isoFormat('D MMMM Y');
             
-            $template2->cloneRowAndSetValues('n', $dataValue);
-            $template2->setValue('no', $assignment->nomor_st);
+            $template->cloneRowAndSetValues('n', $dataValue);
+            $template->setValue('dasar_pelaksanaanTugas', $assignment->business_trip_reason);
+            $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
+            $template->setValue('helperPlh', $assignment->plh);
+            $template->setValue('penanda_tangan', $assignment->head_officer->name);
             
             if ($assignment->date_st == null) {
-                $template1->setValue('tanggal', '[@TanggalND]');
+                $template->setValue('tanggal', '[@TanggalND]');
             } else {
-                $template1->setValue('tanggal', $date_st);
+                $template->setValue('tanggal', $date_st);
             }
 
-            // Save the modified templa$template2 as a new file
+            if ($assignment->nomor_st == '') {
+                $template->setValue('no', '[@NomorND]');
+            } else {
+                $template->setValue('no', $assignment->nomor_st);
+            }
+
+            // Save the modified templa$template as a new file
             $filename = 'print_st2.docx';
-            $template2->saveAs(storage_path('app/' . $filename));
+            $template->saveAs(storage_path('app/' . $filename));
 
             // Provide the Word document as a download with the correct headers
             $headers = [
@@ -205,26 +219,40 @@ class PrintController extends Controller
                 ];
             }
 
-            $assignment = Assignment::where('identity_number', $nomor_identitas)
+            $assignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+            ->where('assignments.identity_number', $nomor_identitas)
+            ->select([
+                'assignments.*', 
+                'head_officer.name as head_officer',
+                'assignments.identity_number as nomor_identitas'
+            ])
             ->first();
 
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');
             $date_st = Carbon::parse($assignment->date_st)->isoFormat('D MMMM Y');
             
-            $template1->cloneRowAndSetValues('n', $dataValue);
-            $template1->setValue('no', $assignment->nomor_st);
+            $template->cloneRowAndSetValues('n', $dataValue);
+            $template->setValue('dasar_pelaksanaanTugas', $assignment->business_trip_reason);
+            $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
+            $template->setValue('helperPlh', $assignment->plh);
+            $template->setValue('penanda_tangan', $assignment->head_officer);
 
             if ($assignment->date_st == null) {
-                $template1->setValue('tanggal', '[@TanggalND]');
+                $template->setValue('tanggal', '[@TanggalND]');
             } else {
-                $template1->setValue('tanggal', $date_st);
+                $template->setValue('tanggal', $date_st);
             }
             
+            if ($assignment->nomor_st == '') {
+                $template->setValue('no', '[@NomorND]');
+            } else {
+                $template->setValue('no', $assignment->nomor_st);
+            }
 
             // Save the modified template as a new file
             $filename = 'print_st1.docx';
-            $template1->saveAs(storage_path('app/' . $filename));
+            $template->saveAs(storage_path('app/' . $filename));
 
             // Provide the Word document as a download with the correct headers
             $headers = [
