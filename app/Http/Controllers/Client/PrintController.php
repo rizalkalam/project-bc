@@ -55,6 +55,8 @@ class PrintController extends Controller
                 $startDate = Carbon::parse($key->departure_date);
                 $endDate = Carbon::parse($key->return_date);
                 $duration = $startDate->diffInDays($endDate);
+                setlocale(LC_TIME, 'id_ID');
+                \Carbon\Carbon::setLocale('id');
                 $dataValue = [
                     'spdPjg'=>$key->no_spd,
                     'namaPpk'=>$key->ppk,
@@ -66,16 +68,15 @@ class PrintController extends Controller
                     'maksudPd'=>$key->businesss_trip_reason,
                     'kotaAsal1'=>$key->city_origin,
                     'lamaTugas'=> $duration,
-                    'tglSpd'=>$key->date_spd,
-                    'tglBerangkat'=>$key->departure_date,
-                    'tglKembali'=>$key->reutrn_date,
+                    'tglSpd'=>Carbon::parse($key->date_spd)->isoFormat('D MMMM Y'),
+                    'tglBerangkat'=>Carbon::parse($key->departure_date)->isoFormat('D MMMM Y'),
+                    'tglKembali'=>Carbon::parse($key->reutrn_date)->isoFormat('D MMMM Y'),
                     'pencairan'=>$key->dipa_search,
                     'akun'=>'tes-keydummy',
                     'stPjg'=>$key->no_st,
                     'nipPpk'=>$key->nip_ppk,
                     'jenisKendaraan'=>$key->transportation_name,
                     'kotaTujuan'=>$key->destination_city_1,
-                    'tglBerangkat'=>$key->departure_date,
                     'helperPlh'=>$key->plh,
                     'namaPej'=>$key->namaPej,
                     'nipPej'=>$key->nipPej,
@@ -181,7 +182,7 @@ class PrintController extends Controller
             $template->setValue('dasar_pelaksanaanTugas', $assignment->business_trip_reason);
             $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
             $template->setValue('helperPlh', $assignment->plh);
-            $template->setValue('penanda_tangan', $assignment->head_officer->name);
+            $template->setValue('penanda_tangan', $assignment->head_officer);
             
             if ($assignment->date_st == null) {
                 $template->setValue('tanggal', '[@TanggalND]');
