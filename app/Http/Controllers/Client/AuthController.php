@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -22,11 +24,28 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $userA = Auth::user();
+        $roleName = $userA->getRoleNames()->first();
+
+        if ($roleName == 'master') {
+            return response()->json([
+                'message' => 'Login success',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role'=>$roleName,
+            ]);
+        } elseif ($roleName == 'ppk') {
+            return response()->json([
+                'message' => 'Login success',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'role'=>$roleName,
+            ]);
+        }
         return response()->json([
-            'message' => 'Login success',
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
+            'message' => 'Access denied',
+        ], 403);
+
     }
 
     public function logout()

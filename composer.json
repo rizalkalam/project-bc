@@ -6,6 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "spatie/laravel-permission": "^5.10",
+        "intervention/image":"^2.1",
+        "phpoffice/phpword": "dev-master",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
