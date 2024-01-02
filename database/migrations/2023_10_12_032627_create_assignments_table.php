@@ -34,8 +34,8 @@ return new class extends Migration
             //===============
             $table->string('disbursement')->nullable();
             $table->string('no_spyt')->nullable();
-            $table->string('implementation_tasks')->nullable();
-            $table->string('business_trip_reason')->nullable();
+            $table->longText('implementation_tasks')->nullable();
+            $table->longText('business_trip_reason')->nullable();
             $table->string('destination_office')->nullable();
             $table->string('city_origin')->nullable();
             $table->string('destination_city_1')->nullable();

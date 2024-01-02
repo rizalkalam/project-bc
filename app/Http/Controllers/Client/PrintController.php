@@ -53,7 +53,7 @@ class PrintController extends Controller
                 $templateST = new TemplateProcessor(storage_path('app/template_spd.docx'));
 
                 $startDate = Carbon::parse($key->departure_date);
-                $endDate = Carbon::parse($key->return_date);
+                $endDate = Carbon::parse($key->return_date)->addDay();
                 $duration = $startDate->diffInDays($endDate);
                 setlocale(LC_TIME, 'id_ID');
                 \Carbon\Carbon::setLocale('id');
@@ -65,26 +65,27 @@ class PrintController extends Controller
                     'pangkatPeg'=>$key->pangkatPeg,
                     'jabPeg'=>$key->jabPeg,
                     'golPeg'=>$key->golPeg,
-                    'maksudPd'=>$key->businesss_trip_reason,
+                    'maksudPd'=>$key->business_trip_reason,
                     'kotaAsal1'=>$key->city_origin,
                     'lamaTugas'=> $duration,
                     'tglSpd'=>Carbon::parse($key->date_spd)->isoFormat('D MMMM Y'),
                     'tglBerangkat'=>Carbon::parse($key->departure_date)->isoFormat('D MMMM Y'),
-                    'tglKembali'=>Carbon::parse($key->reutrn_date)->isoFormat('D MMMM Y'),
+                    'tglKembali'=>Carbon::parse($key->return_date)->isoFormat('D MMMM Y'),
                     'pencairan'=>$key->dipa_search,
-                    'akun'=>'tes-keydummy',
                     'stPjg'=>$key->no_st,
                     'nipPpk'=>$key->nip_ppk,
-                    'jenisKendaraan'=>$key->transportation_name,
-                    'kotaTujuan'=>$key->destination_city_1,
+                    'jenisKendaraan'=>$key->transportation,
+                    'kotaTujuan'=> $key->destination_city_1 . 
+                                    ($key->destination_city_2 ? ' - ' . $key->destination_city_2 : '') . 
+                                    ($key->destination_city_3 ? ' - ' . $key->destination_city_3 : ''),
                     'helperPlh'=>$key->plh,
                     'namaPej'=>$key->namaPej,
                     'nipPej'=>$key->nipPej,
-                    'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->kota_tujuan_tugas_1 : '',
-                    'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->kota_tujuan_tugas_2 : '',
-                    'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->kota_tujuan_tugas_3 : '',
-                    'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->kota_tujuan_tugas_4 : '',
-                    'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->kota_tujuan_tugas_5 : '',
+                    'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
+                    'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->destination_city_2 : '',
+                    'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
+                    'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
+                    'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
                 ];
                 // $template->setValues($dataValue);
         
@@ -122,7 +123,11 @@ class PrintController extends Controller
                     'Content-Disposition' => 'attachment; filename="' . $nameZip . '"',
                 ];
 
-                return response()->download($zipFilename, $nameZip, $headers)->deleteFileAfterSend(true);;
+                return response()->download($zipFilename, $nameZip, $headers)->deleteFileAfterSend(true);
+                // return response()->json([
+                //     'message' => 'Data Assignment success created',
+                //     'data' => $dataValue
+                // ], 200);
             } else {
                 return response()->json(['message' => 'Failed to create ZIP archive'], 500);
             }

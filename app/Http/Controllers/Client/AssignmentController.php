@@ -19,6 +19,7 @@ class AssignmentController extends Controller
         $data = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+        ->orderBy('assignments.identity_number')
         ->select([
             'assignments.*', 
             'users.name as employee',
@@ -115,16 +116,17 @@ class AssignmentController extends Controller
         ->where('assignments.id', $id)
         ->select([
             'assignments.*', 
-            // 'assignments.user_id as id_pegawai',
-            // 'users.name as employee',
             'employee.id as id_pegawai',
             'employee.name as employee',
+            'assignments.identity_number as nomor_identitas',
             'ppk.id as id_ppk',
             'ppk.name as ppk',
             'head_officer.id as id_head_officer',
             'head_officer.name as head_officer'
         ])
         ->first();
+
+        $data->makeHidden('identity_number');
 
         if (!empty($data)) {
             return response()->json([
@@ -295,34 +297,6 @@ class AssignmentController extends Controller
             'id_pegawai'=>'required',
             'id_ppk'=>'required',
             'nomor_identitas'=>'required',
-            // 'penanda_tangan'=>'required',
-            'unit'=>'required',
-            'no_ndpermohonan_st'=>'required',
-            // 'no_st'=>'required',
-            // 'nomor_st'=>'required',
-            // 'tanggal_st'=>'required',
-            'no_spd'=>'required',
-            'tanggal_spd'=>'required',
-            'tanggal_berangkat'=>'required',
-            'tanggal_kembali'=>'required',
-            'pencarian_dipa'=>'required',
-            'tagging'=>'nullable',
-            'plt'=>'required',
-            // 'plh'=>'required',
-
-            'pencairan_dana'=>'required',
-            'no_spyt'=>'required',
-            'dasar_pelaksanaan_tugas'=>'required',
-            'maksud_perjalanan_dinas'=>'required',
-            'kantor_tujuan_tugas'=>'required',
-            'kota_asal_tugas'=>'required',
-            'kota_tujuan_tugas_1'=>'required',
-            'kota_tujuan_tugas_2'=>'nullable',
-            'kota_tujuan_tugas_3'=>'nullable',
-            'kota_tujuan_tugas_4'=>'nullable',
-            'kota_tujuan_tugas_5'=>'nullable',
-            'transportasi'=>'required',
-            'tandatangan'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -350,7 +324,7 @@ class AssignmentController extends Controller
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
-                    'tagging_status'=> $request->tagging,
+                    'tagging_status'=> $request->tagging_status,
                     'plt' => $request->plt,
                     'plh' => 'Plh',
                     'disbursement' => $request->pencairan_dana,
@@ -385,7 +359,7 @@ class AssignmentController extends Controller
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
-                    'tagging_status'=> $request->tagging,
+                    'tagging_status'=> $request->tagging_status,
                     'plt' => $request->plt,
                     'plh' => 'Plh',
                     'disbursement' => $request->pencairan_dana,
