@@ -72,15 +72,15 @@ class PrintController extends Controller
                     'tglBerangkat'=>Carbon::parse($key->departure_date)->isoFormat('D MMMM Y'),
                     'tglKembali'=>Carbon::parse($key->return_date)->isoFormat('D MMMM Y'),
                     'pencairan'=>$key->dipa_search,
-                    'stPjg'=>$key->no_st,
+                    'stPjg'=>$key->no_spd,
                     'nipPpk'=>$key->nip_ppk,
                     'jenisKendaraan'=>$key->transportation,
-                    'kotaTujuan'=> $key->destination_city_1 . 
-                                    ($key->destination_city_2 ? ' - ' . $key->destination_city_2 : '') . 
-                                    ($key->destination_city_3 ? ' - ' . $key->destination_city_3 : ''),
                     'helperPlh'=>$key->plh,
                     'namaPej'=>$key->namaPej,
                     'nipPej'=>$key->nipPej,
+                    'kotaTujuan'=> $key->destination_city_1 . 
+                                    ($key->destination_city_2 ? ' - ' . $key->destination_city_2 : '') . 
+                                    ($key->destination_city_3 ? ' - ' . $key->destination_city_3 : ''),
                     'kotaTujuanI'=>$key->destination_city_1 !== null ? $key->destination_city_1 : '',
                     'kotaTujuanII'=>$key->destination_city_2 !== null ? $key->destination_city_2 : '',
                     'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
@@ -189,13 +189,13 @@ class PrintController extends Controller
             $template->setValue('helperPlh', $assignment->plh);
             $template->setValue('penanda_tangan', $assignment->head_officer);
             
-            if ($assignment->date_st == null) {
+            if ($assignment->date_st == null || $assignment->date_st == '') {
                 $template->setValue('tanggal', '[@TanggalND]');
             } else {
-                $template->setValue('tanggal', $date_st);
+                $template->setValue('tanggal', $assignment->date_st);
             }
-
-            if ($assignment->nomor_st == '') {
+            
+            if ($assignment->nomor_st == null || $assignment->nomor_st == '') {
                 $template->setValue('no', '[@NomorND]');
             } else {
                 $template->setValue('no', $assignment->nomor_st);
