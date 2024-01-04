@@ -333,10 +333,14 @@ class AssignmentController extends Controller
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
                     'destination_city_1' => $request->kota_tujuan_tugas_1 !== 'undefined' ? $request->kota_tujuan_tugas_1 : " ",
-                    'destination_city_2' => $request->kota_tujuan_tugas_2 !== 'undefined' ? $request->kota_tujuan_tugas_2 : " ",
-                    'destination_city_3' => $request->kota_tujuan_tugas_3 !== 'undefined' ? $request->kota_tujuan_tugas_3 : " ",
-                    'destination_city_4' => $request->kota_tujuan_tugas_4 !== 'undefined' ? $request->kota_tujuan_tugas_4 : " ",
-                    'destination_city_5' => $request->kota_tujuan_tugas_5 !== 'undefined' ? $request->kota_tujuan_tugas_5 : " ",
+                    'destination_city_2' => isset($request->kota_tujuan_tugas_2) && $request->kota_tujuan_tugas_2 !== 'null'
+                    ? $request->kota_tujuan_tugas_2 : null,                
+                    'destination_city_3' => isset($request->kota_tujuan_tugas_3) && $request->kota_tujuan_tugas_3 !== 'null'
+                    ? $request->kota_tujuan_tugas_3 : null,
+                    'destination_city_4' => isset($request->kota_tujuan_tugas_4) && $request->kota_tujuan_tugas_4 !== 'null'
+                    ? $request->kota_tujuan_tugas_4 : null,
+                    'destination_city_5' => isset($request->kota_tujuan_tugas_5) && $request->kota_tujuan_tugas_5 !== 'null'
+                    ? $request->kota_tujuan_tugas_5 : null,
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),
@@ -367,10 +371,14 @@ class AssignmentController extends Controller
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
                     'destination_city_1' => $request->kota_tujuan_tugas_1 !== 'undefined' ? $request->kota_tujuan_tugas_1 : " ",
-                    'destination_city_2' => $request->kota_tujuan_tugas_2 !== 'undefined' ? $request->kota_tujuan_tugas_2 : " ",
-                    'destination_city_3' => $request->kota_tujuan_tugas_3 !== 'undefined' ? $request->kota_tujuan_tugas_3 : " ",
-                    'destination_city_4' => $request->kota_tujuan_tugas_4 !== 'undefined' ? $request->kota_tujuan_tugas_4 : " ",
-                    'destination_city_5' => $request->kota_tujuan_tugas_5 !== 'undefined' ? $request->kota_tujuan_tugas_5 : " ",
+                    'destination_city_2' => isset($request->kota_tujuan_tugas_2) && $request->kota_tujuan_tugas_2 !== 'null'
+                    ? $request->kota_tujuan_tugas_2 : null,                
+                    'destination_city_3' => isset($request->kota_tujuan_tugas_3) && $request->kota_tujuan_tugas_3 !== 'null'
+                    ? $request->kota_tujuan_tugas_3 : null,
+                    'destination_city_4' => isset($request->kota_tujuan_tugas_4) && $request->kota_tujuan_tugas_4 !== 'null'
+                    ? $request->kota_tujuan_tugas_4 : null,
+                    'destination_city_5' => isset($request->kota_tujuan_tugas_5) && $request->kota_tujuan_tugas_5 !== 'null'
+                    ? $request->kota_tujuan_tugas_5 : null,
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),

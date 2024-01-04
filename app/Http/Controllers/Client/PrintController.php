@@ -86,6 +86,10 @@ class PrintController extends Controller
                     'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
                     'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
                     'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
+                    'kotaKeTujuanII'=>$key->destination_city_1 == null ? $key->destination_city_2 : $key->city_origin,
+                    'kotaKeTujuanIII'=>$key->destination_city_2 == null ? $key->destination_city_3 : $key->city_origin,
+                    'kotaKeTujuanIV'=>$key->destination_city_3 == null ? $key->destination_city_4 : $key->city_origin,
+                    'kotaKeTujuanV'=>$key->destination_city_4 == null ? $key->destination_city_5 : $key->city_origin
                 ];
                 // $template->setValues($dataValue);
         
@@ -100,7 +104,8 @@ class PrintController extends Controller
 
             // Create a ZIP archive and add all temporary documents to it
             $zip = new ZipArchive();
-            $nameZip = 'print_spd' . $data->first()->no_st . '.zip';
+            $date_name = Carbon::parse($data->first()->update_at)->isoFormat('DMMMMY');
+            $nameZip = 'print_spd_' . $date_name . '.zip';
             $zipFilename = storage_path('app/print_spd' . $nameZip);
             if ($zip->open($zipFilename, ZipArchive::CREATE) === TRUE) {
                 $tempFiles = glob($tempDir . '*.docx');
@@ -244,13 +249,13 @@ class PrintController extends Controller
             $template->setValue('helperPlh', $assignment->plh);
             $template->setValue('penanda_tangan', $assignment->head_officer);
 
-            if ($assignment->date_st == null) {
+            if ($assignment->date_st == null || $assignment->date_st == '') {
                 $template->setValue('tanggal', '[@TanggalND]');
             } else {
                 $template->setValue('tanggal', $date_st);
             }
             
-            if ($assignment->nomor_st == '') {
+            if ($assignment->nomor_st == '' || $assignment->nomor_st == null) {
                 $template->setValue('no', '[@NomorND]');
             } else {
                 $template->setValue('no', $assignment->nomor_st);
