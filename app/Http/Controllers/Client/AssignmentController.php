@@ -142,7 +142,7 @@ class AssignmentController extends Controller
 
     public function create(Request $request)
     {
-        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+        $head_office = User::where('name', '=', 'Moch. Arif Setijo Noegroho')
         ->first();
 
         // $validator = Validator::make($request->all(),[

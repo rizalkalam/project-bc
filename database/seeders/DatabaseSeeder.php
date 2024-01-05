@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            UnitSeeder::class,
-            TransportationSeeder::class,
-            AssignmentSeeder::class,
+            // UnitSeeder::class,
+            // TransportationSeeder::class,
+            // AssignmentSeeder::class,
          ]);
     }
 }
