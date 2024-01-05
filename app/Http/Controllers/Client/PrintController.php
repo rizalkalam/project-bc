@@ -86,11 +86,30 @@ class PrintController extends Controller
                     'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
                     'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
                     'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
-                    'kotaKeTujuanII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
-                    'kotaKeTujuanIII'=>$key->destination_city_4 !== null ? $key->destination_city_4 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
-                    'kotaKeTujuanIV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
-                    'kotaKeTujuanV'=>$key->destination_city_6 !== null ? $key->destination_city_6 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
                 ];
+
+                if ($key->destination_city_2 == null || $key->destination_city_2 == " ") {
+                    $dataValue['kotaKeTujuanII'] = $key->city_origin;
+                    $dataValue['kotaKeTujuanIII'] = ' ';
+                    $dataValue['kotaKeTujuanIV'] = ' ';
+                    $dataValue['kotaKeTujuanV'] = ' ';
+                } elseif ($key->destination_city_3 == null || $key->destination_city_3 == " ") {
+                    $dataValue['kotaKeTujuanII'] = $key->destination_city_2;
+                    $dataValue['kotaKeTujuanIII'] = $key->city_origin;
+                    $dataValue['kotaKeTujuanIV'] = ' ';
+                    $dataValue['kotaKeTujuanV'] = ' ';
+                } elseif ($key->destination_city_4 == null || $key->destination_city_4 == " ") {
+                    $dataValue['kotaKeTujuanII'] = $key->destination_city_2;
+                    $dataValue['kotaKeTujuanIII'] = $key->destination_city_3;
+                    $dataValue['kotaKeTujuanIV'] = $key->city_origin;
+                    $dataValue['kotaKeTujuanV'] = ' ';
+                } elseif ($key->destination_city_5 == null || $key->destination_city_5 == " ") {
+                    $dataValue['kotaKeTujuanII'] = $key->destination_city_2;
+                    $dataValue['kotaKeTujuanIII'] = $key->destination_city_3;
+                    $dataValue['kotaKeTujuanIV'] = $key->destination_city_4;
+                    $dataValue['kotaKeTujuanV'] = $key->city_origin;
+                }
+
                 // $template->setValues($dataValue);
         
                 // Set values for the template
