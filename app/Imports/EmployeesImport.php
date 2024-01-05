@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -32,12 +33,19 @@ class EmployeesImport implements ToCollection, WithHeadingRow
                 $this->existingNips[] = $nip;
             }
 
+            if (empty(explode(' ',trim($row['nama']))[1])) {
+                $custom_password = explode(' ',trim($row['nama']))[0].substr($row['nip'], 0, 5);
+            } else {
+                $custom_password = explode(' ',trim($row['nama']))[0].explode(' ',trim($row['nama']))[1].substr($row['nip'], 0, 5);
+            }
+
             $employee = User::create([
                 'name' => $row['nama'],
                 'emp_id' => $row['nip'],
                 'rank' => $row['pangkat'],
                 'gol_room' => $row['gol_ruang'],
-                'position' => $row['jabatan']
+                'position' => $row['jabatan'],
+                'password' => Hash::make($custom_password)
             ]);
 
             $employee->assignRole('biasa');
