@@ -71,16 +71,16 @@ class UserSeeder extends Seeder
 
         // $employee->assignRole('biasa');
 
-        // $employee = User::create([
-        //     'id'=>5,
-        //     'name'=>'Mustofa Irsal',
-        //     'email'=>'irsal@gmail.com',
-        //     'password'=>'irsal',
-        //     'emp_id'=>196012232688131276,
-        //     'rank'=>'Pembina Tk.I',
-        //     'gol_room'=>'IV/b',
-        //     'position'=>'Kepala KPPBC TMC Kudus'
-        // ]);
+        $employee = User::create([
+            'id'=>5,
+            'name'=>'Mustofa Irsal',
+            'email'=>'irsal@gmail.com',
+            'password'=>'irsal',
+            'emp_id'=>196012232688131276,
+            'rank'=>'Pembina Tk.I',
+            'gol_room'=>'IV/b',
+            'position'=>'Kepala KPPBC TMC Kudus'
+        ]);
 
         // $employee->assignRole('biasa');
     }

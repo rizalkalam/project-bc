@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Imports\EmployeesImport;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -90,7 +91,7 @@ class EmployeeController extends Controller
             'position'=>'required',
             // 'email'=>'nullable',
             'password'=>'nullable',
-            'role'=>'required'
+            // 'role'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -102,6 +103,12 @@ class EmployeeController extends Controller
         }
 
         try {
+            if (empty(explode(' ',trim($request->name))[1])) {
+                $custom_password = explode(' ',trim($request->name))[0].substr($request->emp_id, 0, 5);
+            } else {
+                $custom_password = explode(' ',trim($request->name))[0].explode(' ',trim($request->name))[1].substr($request->emp_id, 0, 5);
+            }
+            
             $data = User::create([
                 'name'=>$request->name,
                 'emp_id'=>$request->emp_id,
@@ -109,10 +116,10 @@ class EmployeeController extends Controller
                 'gol_room'=>$request->gol_room,
                 'position'=>$request->position,
                 // 'email'=>$request->email,
-                'password'=>$request->password
+                'password'=>Hash::make($custom_password)
             ]);
 
-            $data->assignRole($request->role);
+            $data->assignRole('biasa');
 
             return response()->json([
                 'message' => 'Success',
