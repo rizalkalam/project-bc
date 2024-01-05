@@ -22,7 +22,7 @@ class CheckRole
             return $next($request);
         }
 
-        // return response()->json(['message' => 'Akses ditolak'], 403);
+        return response()->json(['message' => 'Akses ditolak'], 403);
     }
     }
 

@@ -183,7 +183,7 @@ class AssignmentController extends Controller
         //         'data' => [],
         //         // 'tes' => $head_office->id
         //     ], 400);
-        // }
+// }
 
         if ($request->tanggal_kembali >= $request->tanggal_berangkat) {
             if ($request->plt == 'plh') {
@@ -194,8 +194,8 @@ class AssignmentController extends Controller
                     'head_officer' => $request->penanda_tangan,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
-                    'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
+                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
                     'date_st' => $request->tanggal_st,
                     'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -211,11 +211,11 @@ class AssignmentController extends Controller
                     'business_trip_reason' => $request->maksud_perjalanan_dinas,
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
-                    'destination_city_1' => $request->kota_tujuan_tugas_1,
-                    'destination_city_2' => $request->kota_tujuan_tugas_2,
-                    'destination_city_3' => $request->kota_tujuan_tugas_3,
-                    'destination_city_4' => $request->kota_tujuan_tugas_4,
-                    'destination_city_5' => $request->kota_tujuan_tugas_5,
+                    'destination_city_1' => $request->kota_tujuan_tugas_1 !== null ? $request->kota_tujuan_tugas_1 : " ",
+                    'destination_city_2' => $request->kota_tujuan_tugas_2 !== null ? $request->kota_tujuan_tugas_2 : " ",
+                    'destination_city_3' => $request->kota_tujuan_tugas_3 !== null ? $request->kota_tujuan_tugas_3 : " ",
+                    'destination_city_4' => $request->kota_tujuan_tugas_4 !== null ? $request->kota_tujuan_tugas_4 : " ",
+                    'destination_city_5' => $request->kota_tujuan_tugas_5 !== null ? $request->kota_tujuan_tugas_5 : " ",
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),
@@ -230,7 +230,7 @@ class AssignmentController extends Controller
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
                     'date_st' => $request->tanggal_st,
                     'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -246,11 +246,11 @@ class AssignmentController extends Controller
                     'business_trip_reason' => $request->maksud_perjalanan_dinas,
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
-                    'destination_city_1' => $request->kota_tujuan_tugas_1,
-                    'destination_city_2' => $request->kota_tujuan_tugas_2,
-                    'destination_city_3' => $request->kota_tujuan_tugas_3,
-                    'destination_city_4' => $request->kota_tujuan_tugas_4,
-                    'destination_city_5' => $request->kota_tujuan_tugas_5,
+                    'destination_city_1' => $request->kota_tujuan_tugas_1 !== null ? $request->kota_tujuan_tugas_1 : " ",
+                    'destination_city_2' => $request->kota_tujuan_tugas_2 !== null ? $request->kota_tujuan_tugas_2 : " ",
+                    'destination_city_3' => $request->kota_tujuan_tugas_3 !== null ? $request->kota_tujuan_tugas_3 : " ",
+                    'destination_city_4' => $request->kota_tujuan_tugas_4 !== null ? $request->kota_tujuan_tugas_4 : " ",
+                    'destination_city_5' => $request->kota_tujuan_tugas_5 !== null ? $request->kota_tujuan_tugas_5 : " ",
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),
@@ -294,9 +294,9 @@ class AssignmentController extends Controller
         ->first();
 
         $validator = Validator::make($request->all(),[
-            'id_pegawai'=>'required',
             'id_ppk'=>'required',
             'nomor_identitas'=>'required',
+            ''
         ]);
 
         if ($validator->fails()) {
@@ -310,7 +310,6 @@ class AssignmentController extends Controller
         if ($request->tanggal_kembali >= $request->tanggal_berangkat) {
             if ($request->plt == 'plh') {
                 $requestData = [
-                    'user_id' => $request->id_pegawai,
                     'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $request->penanda_tangan,
@@ -319,7 +318,7 @@ class AssignmentController extends Controller
                     'no_st' => $request->no_st,
                     'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
                     'date_st' => $request->tanggal_st,
-                    'no_spd' => $request->no_spd,
+                    // 'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
@@ -333,11 +332,15 @@ class AssignmentController extends Controller
                     'business_trip_reason' => $request->maksud_perjalanan_dinas,
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
-                    'destination_city_1' => $request->kota_tujuan_tugas_1 !== 'undefined' ? $request->kota_tujuan_tugas_1 : null,
-                    'destination_city_2' => $request->kota_tujuan_tugas_2 !== 'undefined' ? $request->kota_tujuan_tugas_2 : null,
-                    'destination_city_3' => $request->kota_tujuan_tugas_3 !== 'undefined' ? $request->kota_tujuan_tugas_3 : null,
-                    'destination_city_4' => $request->kota_tujuan_tugas_4 !== 'undefined' ? $request->kota_tujuan_tugas_4 : null,
-                    'destination_city_5' => $request->kota_tujuan_tugas_5 !== 'undefined' ? $request->kota_tujuan_tugas_5 : null,
+                    'destination_city_1' => $request->kota_tujuan_tugas_1 !== 'undefined' ? $request->kota_tujuan_tugas_1 : " ",
+                    'destination_city_2' => isset($request->kota_tujuan_tugas_2) && $request->kota_tujuan_tugas_2 !== 'null'
+                    ? $request->kota_tujuan_tugas_2 : null,                
+                    'destination_city_3' => isset($request->kota_tujuan_tugas_3) && $request->kota_tujuan_tugas_3 !== 'null'
+                    ? $request->kota_tujuan_tugas_3 : null,
+                    'destination_city_4' => isset($request->kota_tujuan_tugas_4) && $request->kota_tujuan_tugas_4 !== 'null'
+                    ? $request->kota_tujuan_tugas_4 : null,
+                    'destination_city_5' => isset($request->kota_tujuan_tugas_5) && $request->kota_tujuan_tugas_5 !== 'null'
+                    ? $request->kota_tujuan_tugas_5 : null,
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),
@@ -345,16 +348,15 @@ class AssignmentController extends Controller
                 ];
             } else {
                 $requestData = [
-                    'user_id' => $request->id_pegawai,
                     'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $head_office->id,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
+                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/'.Carbon::now()->format('Y') ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : '[@NomorND]',
                     'date_st' => $request->tanggal_st,
-                    'no_spd' => $request->no_spd,
+                    // 'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
@@ -368,11 +370,15 @@ class AssignmentController extends Controller
                     'business_trip_reason' => $request->maksud_perjalanan_dinas,
                     'destination_office' => $request->kantor_tujuan_tugas,
                     'city_origin' => $request->kota_asal_tugas,
-                    'destination_city_1' => $request->kota_tujuan_tugas_1,
-                    'destination_city_2' => $request->kota_tujuan_tugas_2,
-                    'destination_city_3' => $request->kota_tujuan_tugas_3,
-                    'destination_city_4' => $request->kota_tujuan_tugas_4,
-                    'destination_city_5' => $request->kota_tujuan_tugas_5,
+                    'destination_city_1' => $request->kota_tujuan_tugas_1 !== 'undefined' ? $request->kota_tujuan_tugas_1 : " ",
+                    'destination_city_2' => isset($request->kota_tujuan_tugas_2) && $request->kota_tujuan_tugas_2 !== 'null'
+                    ? $request->kota_tujuan_tugas_2 : null,                
+                    'destination_city_3' => isset($request->kota_tujuan_tugas_3) && $request->kota_tujuan_tugas_3 !== 'null'
+                    ? $request->kota_tujuan_tugas_3 : null,
+                    'destination_city_4' => isset($request->kota_tujuan_tugas_4) && $request->kota_tujuan_tugas_4 !== 'null'
+                    ? $request->kota_tujuan_tugas_4 : null,
+                    'destination_city_5' => isset($request->kota_tujuan_tugas_5) && $request->kota_tujuan_tugas_5 !== 'null'
+                    ? $request->kota_tujuan_tugas_5 : null,
                     'transportation' => $request->transportasi,
                     'signature' => $request->tandatangan,
                     'created_at' => Carbon::now(),
@@ -381,9 +387,11 @@ class AssignmentController extends Controller
             }
     
             try {
-                DB::transaction(function () use ($requestData, $id){
-                    DB::table('assignments')->where('id', $id)->update($requestData);
-                    DB::table('backups')->where('id', $id)->update($requestData);
+                $data_identity = Assignment::where('id', $id)->first();
+
+                DB::transaction(function () use ($requestData, $data_identity){
+                    DB::table('assignments')->where('identity_number', $data_identity->identity_number)->update($requestData);
+                    DB::table('backups')->where('identity_number', $data_identity->identity_number)->update($requestData);
                 });
     
                 $data = Assignment::where('id', $id)->first();
