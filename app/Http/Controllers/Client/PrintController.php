@@ -86,10 +86,10 @@ class PrintController extends Controller
                     'kotaTujuanIII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : '',
                     'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
                     'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
-                    'kotaKeTujuanII'=>$key->destination_city_1 == null ? $key->destination_city_2 : $key->city_origin,
-                    'kotaKeTujuanIII'=>$key->destination_city_2 == null ? $key->destination_city_3 : $key->city_origin,
-                    'kotaKeTujuanIV'=>$key->destination_city_3 == null ? $key->destination_city_4 : $key->city_origin,
-                    'kotaKeTujuanV'=>$key->destination_city_4 == null ? $key->destination_city_5 : $key->city_origin
+                    'kotaKeTujuanII'=>$key->destination_city_3 !== null ? $key->destination_city_3 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
+                    'kotaKeTujuanIII'=>$key->destination_city_4 !== null ? $key->destination_city_4 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
+                    'kotaKeTujuanIV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
+                    'kotaKeTujuanV'=>$key->destination_city_6 !== null ? $key->destination_city_6 : ($key->kotaAsal1 !== null ? $key->kotaAsal1 : ''),
                 ];
                 // $template->setValues($dataValue);
         
