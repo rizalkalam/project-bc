@@ -273,8 +273,10 @@ class PrintController extends Controller
             } else {
                 $template->setValue('tanggal', $date_st);
             }
+
+            $template_noST = 'ST-null/KBC.1002/'.Carbon::now()->format('Y');
             
-            if ($assignment->nomor_st == '' || $assignment->nomor_st == null) {
+            if ($assignment->nomor_st == '' || $assignment->nomor_st == null || $assignment->nomor_st == $template_noST) {
                 $template->setValue('no', '[@NomorND]');
             } else {
                 $template->setValue('no', $assignment->nomor_st);
