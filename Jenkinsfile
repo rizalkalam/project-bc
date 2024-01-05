@@ -1,6 +1,5 @@
-pipeline {
+pipeline{
     agent any
-
     stages {
         stage('Checkout') {
             steps {
@@ -8,30 +7,11 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
+       stage('Deploy HTML File') {
             steps {
-                sh 'composer install'
-                sh 'php artisan test'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    def dockerImage = docker.build("my-laravel-app")
-                }
-            }
-        }
-
-        stage('Deploy to Docker') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }
-
-        stage('Deploy Nginx') {
-            steps {
-                sh 'docker-compose -f nginx/docker-compose.yml up -d'
+                sh 'sudo cp -r /home/rizalkalam/.jenkins/workspace/bc-persuratan/* /var/www/bc.worldinyourhand.my.id/html/'
+                // sh 'sudo cp -r /home/rizalkalam/.jenkins/workspace/SupremeAcademy/assets/* /var/www/worldinyourhand.my.id/html/assets/'
+                // sh 'sudo cp -r /home/rizalkalam/.jenkins/workspace/SupremeAcademy/style/* /var/www/worldinyourhand.my.id/html/style/'
             }
         }
     }
