@@ -88,7 +88,10 @@ class AssignmentController extends Controller
 
     public function data_backup()
     {
-        $data = Backup::get();
+        $data = Backup::select([
+            'backups.*',
+            'backups.identity_number as nomor_identitas'
+        ])->get();
 
         $data->makeHidden('identity_number');
 
