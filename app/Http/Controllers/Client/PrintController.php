@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use Exception;
 use HTMLPurifier;
+use App\Models\Backup;
 use HTMLPurifier_Config;
 use App\Models\Assignment;
 use Illuminate\Http\Response;
@@ -20,7 +21,7 @@ class PrintController extends Controller
 {
     public function print_spd($nomor_identitas)
     {
-        $data = Assignment::join('users', 'users.id', 'assignments.user_id')
+        $assignments = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
         ->where('assignments.identity_number', $nomor_identitas)
@@ -37,6 +38,8 @@ class PrintController extends Controller
             'head_officer.emp_id as nipPej'
         ])
         ->get();
+
+        $data = $assignments->isEmpty() ? Backup::where('backups.identity_number', $nomor_identitas)->get() : $assignments;
 
         $countId = $data->count();
 
@@ -159,20 +162,20 @@ class PrintController extends Controller
 
     public function print_st($nomor_identitas)
     {
-        $data = Assignment::join('users', 'users.id', 'assignments.user_id')
-        // ->join('units', 'units.id', 'assignments.unit_id')
-        // ->join('transportations', 'transportations.id', 'assignments.transportation_id')
+        $assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->where('assignments.identity_number', $nomor_identitas)
         ->select([
             'assignments.no_st',
-            'users.name',
-            'users.emp_id',
-            'users.rank',
-            'users.position',
-            'users.gol_room',
+            'users.name as employee',
+            'users.emp_id as nip_peg',
+            'users.rank as pangatPeg',
+            'users.position as jabPeg',
+            'users.gol_room as golPeg',
             'assignments.date_spd'
         ])
         ->get();
+
+        $data = $assignment->isEmpty() ? Backup::where('backups.identity_number', $nomor_identitas)->get() : $assignment;
 
         $dataValue = []; // Inisialisasi dataValue sebagai array di luar perulangan
         $no = 1; // Inisialisasi nomor awal
@@ -186,22 +189,32 @@ class PrintController extends Controller
             foreach ($data as $key) {
                 $dataValue[] = [
                     'n'=>$no++,
-                    'nama' => $key->name,
-                    'pangkat' => $key->rank,
-                    'jabatan' => $key->position,
-                    'nip'=> $key->emp_id,
-                    'gol'=> $key->gol_room,
+                    'nama' => $key->employee ,
+                    'pangkat' => $key->pangkatPeg,
+                    'jabatan' => $key->jabPeg,
+                    'nip'=> $key->nip_peg,
+                    'gol'=> $key->golPeg,
                 ];
             }
 
-            $assignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-            ->where('assignments.identity_number', $nomor_identitas)
-            ->select([
-                'assignments.*', 
-                'head_officer.name as head_officer',
-                'assignments.identity_number as nomor_identitas'
-            ])
-            ->first();
+            $dataAssignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+                ->where('assignments.identity_number', $nomor_identitas)
+                ->select([
+                    'assignments.*', 
+                    'head_officer.name as head_officer',
+                    'assignments.identity_number as nomor_identitas'
+                ])
+                ->first();
+
+            $assignment = empty($dataAssignment) ? 
+                Backup::where('backups.identity_number', $nomor_identitas)
+                    ->select([
+                        'backups.*',
+                        'backups.identity_number as nomor_identitas'
+                    ])
+                    ->first() 
+                : 
+                $dataAssignment;
 
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');
@@ -243,22 +256,32 @@ class PrintController extends Controller
             foreach ($data as $key) {
                 $dataValue[] = [
                     'n'=>'',
-                    'nama' => $key->name,
-                    'pangkat' => $key->rank,
-                    'jabatan' => $key->position,
-                    'nip'=> $key->emp_id,
-                    'gol'=> $key->gol_room,
+                    'nama' => $key->employee ,
+                    'pangkat' => $key->pangkatPeg,
+                    'jabatan' => $key->jabPeg,
+                    'nip'=> $key->nip_peg,
+                    'gol'=> $key->golPeg,
                 ];
             }
 
-            $assignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-            ->where('assignments.identity_number', $nomor_identitas)
-            ->select([
-                'assignments.*', 
-                'head_officer.name as head_officer',
-                'assignments.identity_number as nomor_identitas'
-            ])
-            ->first();
+            $dataAssignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+                ->where('assignments.identity_number', $nomor_identitas)
+                ->select([
+                    'assignments.*', 
+                    'head_officer.name as head_officer',
+                    'assignments.identity_number as nomor_identitas'
+                ])
+                ->first();
+
+            $assignment = empty($dataAssignment) ? 
+                Backup::where('backups.identity_number', $nomor_identitas)
+                    ->select([
+                        'backups.*',
+                        'backups.identity_number as nomor_identitas'
+                    ])
+                    ->first() 
+                : 
+                $dataAssignment;
 
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');

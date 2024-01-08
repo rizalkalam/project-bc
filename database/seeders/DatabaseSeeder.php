@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\UnitSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\BackupSeeder;
 use Database\Seeders\EmployeeSeeder;
 use Database\Seeders\AssignmentSeeder;
 use Database\Seeders\TransportationSeeder;
@@ -27,9 +28,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
+            AssignmentSeeder::class,
+            BackupSeeder::class,
             // UnitSeeder::class,
             // TransportationSeeder::class,
-            // AssignmentSeeder::class,
          ]);
     }
 }

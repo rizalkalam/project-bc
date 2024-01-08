@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\Assignment;
 use Illuminate\Http\Request;
 use App\Imports\EmployeesImport;
 use Spatie\Permission\Models\Role;
@@ -212,11 +213,13 @@ class EmployeeController extends Controller
 
     public function delete($id){
         $employee = User::where('id', $id)->first();
+        $assignment = Assignment::where('user_id', $id)->delete();
         $employee->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Delete data success',
+            // 'assignment' => $assignment
             // 'data' => $percakapan
         ]);
     }
