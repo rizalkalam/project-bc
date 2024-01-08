@@ -145,46 +145,6 @@ class AssignmentController extends Controller
         $head_office = User::where('name', '=', 'Moch. Arif Setijo Noegroho')
         ->first();
 
-        // $validator = Validator::make($request->all(),[
-        //     'id_pegawai'=>'required',
-        //     'id_ppk'=>'required',
-        //     'penanda_tangan'=>'nullable', // hanya ketika ada plh
-        //     'unit'=>'required',
-        //     'no_ndpermohonan_st'=>'required',
-        //     'no_st'=>'required',
-        //     'nomor_st'=>'required',
-        //     'tanggal_st'=>'required',
-        //     'no_spd'=>'required',
-        //     'tanggal_spd'=>'required',
-        //     'tanggal_berangkat'=>'required',
-        //     'tanggal_kembali'=>'required',
-        //     'pencarian_dipa'=>'required',
-        //     'tagging'=>'nullable',
-        //     'plt'=>'required',
-        //     'tagging'=>'required',
-
-        //     'pencairan_dana'=>'required',
-        //     'no_spyt'=>'required',
-        //     'dasar_pelaksanaan_tugas'=>'required',
-        //     'maksud_perjalanan_dinas'=>'required',
-        //     'kantor_tujuan_tugas'=>'required',
-        //     'kota_asal_tugas'=>'required',
-        //     'kota_tujuan_tugas_1'=>'required',
-        //     'kota_tujuan_tugas_2'=>'nullable',
-        //     'kota_tujuan_tugas_3'=>'nullable',
-        //     'transportasi'=>'required',
-        //     'tandatangan'=>'required'
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => $validator->errors(),
-        //         'data' => [],
-        //         // 'tes' => $head_office->id
-        //     ], 400);
-// }
-
         if ($request->tanggal_kembali >= $request->tanggal_berangkat) {
             if ($request->plt == 'plh') {
                 $requestData = [
@@ -258,16 +218,40 @@ class AssignmentController extends Controller
                 ];
             }
             try {
-                DB::transaction(function () use ($requestData) {
-                    DB::table('assignments')->insert($requestData);
-                    DB::table('backups')->insert($requestData);
-                });
+                $data = Assignment::create($requestData);
     
-                $data = Assignment::latest('created_at')->first();
+                $data_assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
+                ->join('users as ppk', 'ppk.id', 'assignments.ppk')
+                ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+                ->latest('created_at')
+                ->select([
+                    'assignments.*',
+                    'users.name as employee',
+                    'users.emp_id as nip_peg',
+                    'users.rank as pangkatPeg',
+                    'users.gol_room as golPeg',
+                    'users.position as jabPeg',
+                    'ppk.name as ppk',
+                    'ppk.emp_id as nip_ppk',
+                    'head_officer.name as namaPej',
+                    'head_officer.emp_id as nipPej'
+                ])
+                ->get();
+
+                $reqBackup = $requestData;
+                $reqBackup['employee'] = $data_assignment->first()->employee;
+                $reqBackup['ppk'] = $data_assignment->first()->ppk;
+                $reqBackup['jabPeg'] = $data_assignment->first()->jabPeg;
+                $reqBackup['pangkatPeg'] = $data_assignment->first()->pangkatPeg;
+                $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
+                $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
+                $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
+
+                $backup = Backup::create($reqBackup);
     
                 return response()->json([
                     'message' => 'Data Assignment success created',
-                    'data' => $data
+                    'data' => $reqBackup
                 ], 200);
             } catch (\Throwable $th) {
                 //throw $th;
@@ -387,18 +371,40 @@ class AssignmentController extends Controller
             }
     
             try {
-                $data_identity = Assignment::where('id', $id)->first();
-
-                DB::transaction(function () use ($requestData, $data_identity){
-                    DB::table('assignments')->where('identity_number', $data_identity->identity_number)->update($requestData);
-                    DB::table('backups')->where('identity_number', $data_identity->identity_number)->update($requestData);
-                });
+                $data = Assignment::where('assignments.id', $id)->update($requestData);
     
-                $data = Assignment::where('id', $id)->first();
+                $data_assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
+                ->join('users as ppk', 'ppk.id', 'assignments.ppk')
+                ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+                ->where('assignments.id', $id)
+                ->select([
+                    'assignments.*',
+                    'users.name as employee',
+                    'users.emp_id as nip_peg',
+                    'users.rank as pangkatPeg',
+                    'users.gol_room as golPeg',
+                    'users.position as jabPeg',
+                    'ppk.name as ppk',
+                    'ppk.emp_id as nip_ppk',
+                    'head_officer.name as namaPej',
+                    'head_officer.emp_id as nipPej'
+                ])
+                ->get();
+
+                $reqBackup = $requestData;
+                $reqBackup['employee'] = $data_assignment->first()->employee;
+                $reqBackup['ppk'] = $data_assignment->first()->ppk;
+                $reqBackup['jabPeg'] = $data_assignment->first()->jabPeg;
+                $reqBackup['pangkatPeg'] = $data_assignment->first()->pangkatPeg;
+                $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
+                $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
+                $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
+
+                $backup = Backup::where('backups.id', $id)->update($reqBackup);
     
                 return response()->json([
                     'message' => 'Data Assignment edited',
-                    'data' => $data
+                    'data' => $reqBackup
                 ], 200);
     
             } catch (\Throwable $th) {
