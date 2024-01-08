@@ -88,17 +88,7 @@ class AssignmentController extends Controller
 
     public function data_backup()
     {
-        $data = Backup::join('users', 'users.id', 'backups.user_id')
-        ->join('users as ppk', 'ppk.id', 'backups.ppk')
-        ->join('users as head_officer', 'head_officer.id', 'backups.head_officer')
-        ->select([
-            'backups.*', 
-            'users.name as employee',
-            'ppk.name as ppk',
-            'head_officer.name as head_officer',
-            'backups.identity_number as nomor_identitas'
-        ])
-        ->get();
+        $data = Backup::get();
 
         $data->makeHidden('identity_number');
 
