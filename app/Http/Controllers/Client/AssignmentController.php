@@ -214,7 +214,7 @@ class AssignmentController extends Controller
                 $identityNumber = Backup::where('identity_number', $request->nomor_identitas)->value('identity_number');
                 $userId = Backup::where('user_id', $request->id_pegawai)->value('user_id');
 
-                $existingData = Assignment::where('identity_number', $request->nomor_identitas)
+                $existingData = Backup::where('identity_number', $request->nomor_identitas)
                 ->where('user_id', $request->id_pegawai)
                 ->first();
                 
@@ -222,7 +222,7 @@ class AssignmentController extends Controller
                     return response()->json([
                         'message' => 'Conflict',
                         // 'data' => $requestData,
-                    ], 401);
+                    ], 500);
                 } else {
                     $data = Assignment::create($requestData);
     
