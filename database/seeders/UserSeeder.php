@@ -32,69 +32,69 @@ class UserSeeder extends Seeder
 
         $master->assignRole('master');
 
-        // $officer = User::create([
-        //     'id'=>2,
-        //     'name'=>'Ari Wirasto',
-        //     'email'=>'ari171@gmail.com',
-        //     'password'=>'ari123',
-        //     'emp_id'=>196012231983031002,
-        //     'rank'=>'Penata Tk.1',
-        //     'gol_room'=>'III/D',
-        //     'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
-        // ]);
+        $officer = User::create([
+            'id'=>2,
+            'name'=>'Ari Wirasto',
+            'email'=>'ari171@gmail.com',
+            'password'=>'ari123',
+            'emp_id'=>196012231983031002,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
+        ]);
 
-        // $officer->assignRole('ppk');
+        $officer->assignRole('ppk');
 
-        // $officer = User::create([
-        //     'id'=>3,
-        //     'name'=>'Bambang Setiawan',
-        //     'email'=>'bambang@gmail.com',
-        //     'password'=>'bambang',
-        //     'emp_id'=>196012231983031999,
-        //     'rank'=>'Penata Tk.1',
-        //     'gol_room'=>'III/D',
-        //     'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
-        // ]);
+        $officer = User::create([
+            'id'=>3,
+            'name'=>'Bambang Setiawan',
+            'email'=>'bambang@gmail.com',
+            'password'=>'bambang',
+            'emp_id'=>196012231983031999,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
+        ]);
 
-        // $officer->assignRole('ppk');
+        $officer->assignRole('ppk');
 
-        // $employee = User::create([
-        //     'id'=>4,
-        //     'name'=>'Galang Jati Saka',
-        //     'email'=>'galang@gmail.com',
-        //     'password'=>'galang',
-        //     'emp_id'=>196012231983077571,
-        //     'rank'=>'Penata Tk.1',
-        //     'gol_room'=>'III/D',
-        //     'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
-        // ]);
+        $employee = User::create([
+            'id'=>4,
+            'name'=>'Galang Jati Saka',
+            'email'=>'galang@gmail.com',
+            'password'=>'galang',
+            'emp_id'=>196012231983077571,
+            'rank'=>'Penata Tk.1',
+            'gol_room'=>'III/D',
+            'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
+        ]);
 
-        // $employee->assignRole('biasa');
+        $employee->assignRole('biasa');
 
-        // $employee = User::create([
-        //     'id'=>5,
-        //     'name'=>'Mustofa Irsal',
-        //     'email'=>'irsal@gmail.com',
-        //     'password'=>'irsal',
-        //     'emp_id'=>196012232688131276,
-        //     'rank'=>'Pembina Tk.I',
-        //     'gol_room'=>'IV/b',
-        //     'position'=>'Kepala KPPBC TMC Kudus'
-        // ]);
+        $employee = User::create([
+            'id'=>5,
+            'name'=>'Mustofa Irsal',
+            'email'=>'irsal@gmail.com',
+            'password'=>'irsal',
+            'emp_id'=>196012232688131276,
+            'rank'=>'Pembina Tk.I',
+            'gol_room'=>'IV/b',
+            'position'=>'Kepala KPPBC TMC Kudus'
+        ]);
 
-        // $employee->assignRole('biasa');
+        $employee->assignRole('biasa');
 
-        // $employee = User::create([
-        //     'id'=>6,
-        //     'name'=>'Hana Cinta',
-        //     'email'=>'heycinta@gmail.com',
-        //     'password'=>'cinta123',
-        //     'emp_id'=>196012232688131276,
-        //     'rank'=>'Pembina Tk.I',
-        //     'gol_room'=>'IV/b',
-        //     'position'=>'Kepala KPPBC TMC Kudus'
-        // ]);
+        $employee = User::create([
+            'id'=>6,
+            'name'=>'Hana Cinta',
+            'email'=>'heycinta@gmail.com',
+            'password'=>'cinta123',
+            'emp_id'=>196012232688131276,
+            'rank'=>'Pembina Tk.I',
+            'gol_room'=>'IV/b',
+            'position'=>'Kepala KPPBC TMC Kudus'
+        ]);
 
-        // $employee->assignRole('biasa');
+        $employee->assignRole('biasa');
     }
 }
