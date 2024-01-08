@@ -179,7 +179,7 @@ class AssignmentController extends Controller
                     'user_id' => $request->id_pegawai,
                     'identity_number' =>$request->nomor_identitas,
                     'ppk' => $request->id_ppk,
-                    'head_officer' => $head_office->penanda_tangan,
+                    'head_officer' => $head_office->id,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st,
