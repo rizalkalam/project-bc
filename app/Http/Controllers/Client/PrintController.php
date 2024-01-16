@@ -168,7 +168,7 @@ class PrintController extends Controller
             'assignments.no_st',
             'users.name as employee',
             'users.emp_id as nip_peg',
-            'users.rank as pangatPeg',
+            'users.rank as pangkatPeg',
             'users.position as jabPeg',
             'users.gol_room as golPeg',
             'assignments.date_spd'
