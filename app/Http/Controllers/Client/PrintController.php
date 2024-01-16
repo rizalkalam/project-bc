@@ -71,6 +71,7 @@ class PrintController extends Controller
                     'maksudPd'=>$key->business_trip_reason,
                     'kotaAsal1'=>$key->city_origin,
                     'lamaTugas'=> $duration,
+                    'tglST'=>Carbon::parse($key->date_st)->isoFormat('D MMMM Y'),
                     'tglSpd'=>Carbon::parse($key->date_spd)->isoFormat('D MMMM Y'),
                     'tglBerangkat'=>Carbon::parse($key->departure_date)->isoFormat('D MMMM Y'),
                     'tglKembali'=>Carbon::parse($key->return_date)->isoFormat('D MMMM Y'),
