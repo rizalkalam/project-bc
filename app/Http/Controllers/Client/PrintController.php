@@ -73,6 +73,7 @@ class PrintController extends Controller
                     'lamaTugas'=> $duration,
                     'tglST'=>Carbon::parse($key->date_st)->isoFormat('D MMMM Y'),
                     'tglSpd'=>Carbon::parse($key->date_spd)->isoFormat('D MMMM Y'),
+                    // 'nomorST'=> ,
                     'tglBerangkat'=>Carbon::parse($key->departure_date)->isoFormat('D MMMM Y'),
                     'tglKembali'=>Carbon::parse($key->return_date)->isoFormat('D MMMM Y'),
                     'pencairan'=>$key->dipa_search,
@@ -91,6 +92,15 @@ class PrintController extends Controller
                     'kotaTujuanIV'=>$key->destination_city_4 !== null ? $key->destination_city_4 : '',
                     'kotaTujuanV'=>$key->destination_city_5 !== null ? $key->destination_city_5 : '',
                 ];
+
+                $template_noST = 'ST-null/KBC.1002/'.Carbon::now()->format('Y');
+            
+                if ($key->nomor_st == '' || $key->nomor_st == null || $key->nomor_st == $template_noST) {
+                    // $template->setValue('no', '[@NomorND]');
+                    $dataValue['nomorST'] = '[@NomorND]';
+                } else {
+                    $dataValue['nomorST'] = $key->nomor_st;
+                }
 
                 if ($key->destination_city_2 == null || $key->destination_city_2 == " ") {
                     $dataValue['kotaKeTujuanII'] = $key->city_origin;

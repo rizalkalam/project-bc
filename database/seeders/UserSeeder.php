@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
         //     'emp_id'=>196012231983031002,
         //     'rank'=>'Penata Tk.1',
         //     'gol_room'=>'III/D',
-        //     'position'=>'Pemeriksa Bea dan Cukai Pertama/ Ahli Pertama'
+        //     'position'=>'Kepala KPPBC TMC Kudus'
         // ]);
 
         // $officer->assignRole('ppk');

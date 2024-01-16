@@ -135,7 +135,7 @@ class AssignmentController extends Controller
 
     public function create(Request $request)
     {
-        $head_office = User::where('name', '=', 'Moch. Arif Setijo Noegroho')
+        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
         ->first();
 
         if ($request->tanggal_kembali >= $request->tanggal_berangkat) {
@@ -148,7 +148,7 @@ class AssignmentController extends Controller
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     'no_st' => $request->no_st !== null ? $request->no_st : " ",
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
+                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/' . Carbon::now()->format('Y') ? $request->nomor_st : '',
                     'date_st' => $request->tanggal_st,
                     'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -284,8 +284,6 @@ class AssignmentController extends Controller
         $validator = Validator::make($request->all(),[
             'id_ppk'=>'required',
             'nomor_identitas'=>'required',
-            // 'nomor_identitas'=>'required|unique:backups,identity_number,' . $id,
-            // 'user_id'=>'unique:backups,user_id,' . $id
         ]);
 
         if ($validator->fails()) {
@@ -304,8 +302,8 @@ class AssignmentController extends Controller
                     'head_officer' => $request->penanda_tangan,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
-                    'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $request->nomor_st : '',
+                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
                     'date_st' => $request->tanggal_st,
                     // 'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
@@ -342,8 +340,8 @@ class AssignmentController extends Controller
                     'head_officer' => $head_office->id,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
-                    'no_st' => $request->no_st,
-                    'nomor_st' => 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/'.Carbon::now()->format('Y') ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : '[@NomorND]',
+                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
                     'date_st' => $request->tanggal_st,
                     // 'no_spd' => $request->no_spd,
                     'date_spd' => $request->tanggal_spd,
