@@ -234,6 +234,7 @@ class PrintController extends Controller
             $template->cloneRowAndSetValues('n', $dataValue);
             $template->setValue('dasar_pelaksanaanTugas', $assignment->business_trip_reason);
             $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
+            $template->setValue('pencairan_dipa', $assignment->dipa_search);
             $template->setValue('helperPlh', $assignment->plh);
             $template->setValue('penanda_tangan', $assignment->head_officer);
             
@@ -301,6 +302,7 @@ class PrintController extends Controller
             $template->cloneRowAndSetValues('n', $dataValue);
             $template->setValue('dasar_pelaksanaanTugas', $assignment->business_trip_reason);
             $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
+            $template->setValue('pencairan_dipa', $assignment->dipa_search);
             $template->setValue('helperPlh', $assignment->plh);
             $template->setValue('penanda_tangan', $assignment->head_officer);
 

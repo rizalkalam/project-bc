@@ -309,7 +309,7 @@ class AssignmentController extends Controller
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
 
-                    // 'no_spd' => $request->no_spd,
+                    'no_spd' => $request->no_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
@@ -350,7 +350,7 @@ class AssignmentController extends Controller
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
                     
-                    // 'no_spd' => $request->no_spd,
+                    'no_spd' => $request->no_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
