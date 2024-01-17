@@ -46,7 +46,7 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>'Sragen',
                 'destination_city_3'=>null,
-                'transportation'=>'Becak',
+                'transportation'=>'Transportasi Umum',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -82,7 +82,7 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>null,
                 'destination_city_3'=>null,
-                'transportation'=>'Becak',
+                'transportation'=>'Transportasi Umum',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
@@ -117,7 +117,7 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>null,
                 'destination_city_3'=>null,
-                'transportation'=>'Becak',
+                'transportation'=>'Transportasi Umum',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()

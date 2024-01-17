@@ -296,17 +296,20 @@ class AssignmentController extends Controller
 
         if ($request->tanggal_kembali >= $request->tanggal_berangkat) {
             if ($request->plt == 'plh') {
+                $requestST = [
+                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
+                    'date_st' => $request->tanggal_st,
+                    'date_spd' => $request->tanggal_spd,
+                ];
                 $requestData = [
                     'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $request->penanda_tangan,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
-                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
-                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
-                    'date_st' => $request->tanggal_st,
+
                     // 'no_spd' => $request->no_spd,
-                    'date_spd' => $request->tanggal_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
@@ -334,17 +337,20 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now()
                 ];
             } else {
+                $requestST = [
+                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
+                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
+                    'date_st' => $request->tanggal_st,
+                    'date_spd' => $request->tanggal_spd,
+                ];
                 $requestData = [
                     'identity_number' => $request->nomor_identitas,
                     'ppk' => $request->id_ppk,
                     'head_officer' => $head_office->id,
                     'unit' => $request->unit,
                     'ndreq_st' => $request->no_ndpermohonan_st,
-                    'no_st' => $request->no_st !== null ? $request->no_st : " ",
-                    'nomor_st' => $request->no_st ? 'ST-' . $request->no_st . '/KBC.1002/' . Carbon::now()->format('Y') : null,
-                    'date_st' => $request->tanggal_st,
+                    
                     // 'no_spd' => $request->no_spd,
-                    'date_spd' => $request->tanggal_spd,
                     'departure_date' => $request->tanggal_berangkat,
                     'return_date' => $request->tanggal_kembali,
                     'dipa_search' => $request->pencarian_dipa,
@@ -374,6 +380,7 @@ class AssignmentController extends Controller
             }
     
             try {
+                $data_identity = Assignment::where('id', $id)->first();
                 $data = Assignment::where('assignments.id', $id)->update($requestData);
     
                 $data_assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
@@ -404,6 +411,11 @@ class AssignmentController extends Controller
                 $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
 
                 $backup = Backup::where('backups.id', $id)->update($reqBackup);
+                
+                DB::transaction(function () use ($requestST, $data_identity){
+                    DB::table('assignments')->where('identity_number', $data_identity->identity_number)->update($requestST);
+                    DB::table('backups')->where('identity_number', $data_identity->identity_number)->update($requestST);
+                });
     
                 return response()->json([
                     'message' => 'Data Assignment edited',
