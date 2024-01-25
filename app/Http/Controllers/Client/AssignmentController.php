@@ -357,7 +357,7 @@ class AssignmentController extends Controller
                     'dipa_search' => $request->pencarian_dipa,
                     'tagging_status'=> $request->tagging_status,
                     'plt' => $request->plt,
-                    'plh' => 'Plh',
+                    'plh' => ' ',
                     'disbursement' => $request->pencairan_dana,
                     'no_spyt' => $request->no_spyt,
                     'implementation_tasks' => $request->dasar_pelaksanaan_tugas,
