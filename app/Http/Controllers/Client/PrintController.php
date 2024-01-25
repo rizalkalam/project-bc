@@ -236,7 +236,7 @@ class PrintController extends Controller
             $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
             $template->setValue('pencairan_dipa', $assignment->dipa_search);
             $template->setValue('helperPlh', $assignment->plh);
-            $template->setValue('penanda_tangan', $assignment->head_officer);
+            $template->setValue('penanda_tangan', $assignment->nama_pej);
             
             if ($assignment->date_st == null || $assignment->date_st == '') {
                 $template->setValue('tanggal', '[@TanggalND]');
@@ -304,7 +304,7 @@ class PrintController extends Controller
             $template->setValue('maksud_tujuanTugas', $assignment->implementation_tasks);
             $template->setValue('pencairan_dipa', $assignment->dipa_search);
             $template->setValue('helperPlh', $assignment->plh);
-            $template->setValue('penanda_tangan', $assignment->head_officer);
+            $template->setValue('penanda_tangan', $assignment->nama_pej);
 
             if ($assignment->date_st == null || $assignment->date_st == '') {
                 $template->setValue('tanggal', '[@TanggalND]');
