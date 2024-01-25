@@ -53,6 +53,7 @@ return new class extends Migration
             $table->string('nip_peg')->nullable();
             $table->string('nip_ppk')->nullable();
             $table->string('employee')->nullable();
+            $table->string('nama_pej')->nullable();
             
             $table->timestamps();
         });

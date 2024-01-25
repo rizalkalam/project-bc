@@ -252,6 +252,7 @@ class AssignmentController extends Controller
                     $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
                     $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
                     $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
+                    $reqBackup['nama_pej'] = $data_assignment->first()->nama_pej;
 
                     $backup = Backup::create($reqBackup);
 
@@ -409,6 +410,7 @@ class AssignmentController extends Controller
                 $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
                 $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
                 $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
+                $reqBackup['nama_pej'] = $data_assignment->first()->nama_pej;
 
                 $backup = Backup::where('backups.id', $id)->update($reqBackup);
                 
