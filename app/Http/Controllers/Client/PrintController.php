@@ -21,7 +21,7 @@ class PrintController extends Controller
 {
     public function print_spd($nomor_identitas)
     {
-        $assignments = Assignment::join('users', 'users.id', 'assignments.user_id')
+        $data = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
         ->where('assignments.identity_number', $nomor_identitas)
@@ -38,8 +38,6 @@ class PrintController extends Controller
             'head_officer.emp_id as nipPej'
         ])
         ->get();
-
-        $data = $assignments->isEmpty() ? Backup::where('backups.identity_number', $nomor_identitas)->get() : $assignments;
 
         $countId = $data->count();
 
@@ -186,12 +184,10 @@ class PrintController extends Controller
         ])
         ->get();
 
-        $data = $assignment->isEmpty() ? Backup::where('backups.identity_number', $nomor_identitas)->get() : $assignment;
-
         $dataValue = []; // Inisialisasi dataValue sebagai array di luar perulangan
         $no = 1; // Inisialisasi nomor awal
 
-        $countId = $data->count();
+        $countId = $assignment->count();
 
         // Load the template file
         $template = new TemplateProcessor(storage_path('app/template_st.docx'));
@@ -207,25 +203,6 @@ class PrintController extends Controller
                     'gol'=> $key->golPeg,
                 ];
             }
-
-            $dataAssignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-                ->where('assignments.identity_number', $nomor_identitas)
-                ->select([
-                    'assignments.*', 
-                    'head_officer.name as head_officer',
-                    'assignments.identity_number as nomor_identitas'
-                ])
-                ->first();
-
-            $assignment = empty($dataAssignment) ? 
-                Backup::where('backups.identity_number', $nomor_identitas)
-                    ->select([
-                        'backups.*',
-                        'backups.identity_number as nomor_identitas'
-                    ])
-                    ->first() 
-                : 
-                $dataAssignment;
 
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');
@@ -276,25 +253,6 @@ class PrintController extends Controller
                 ];
             }
 
-            $dataAssignment = Assignment::join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-                ->where('assignments.identity_number', $nomor_identitas)
-                ->select([
-                    'assignments.*', 
-                    'head_officer.name as head_officer',
-                    'assignments.identity_number as nomor_identitas'
-                ])
-                ->first();
-
-            $assignment = empty($dataAssignment) ? 
-                Backup::where('backups.identity_number', $nomor_identitas)
-                    ->select([
-                        'backups.*',
-                        'backups.identity_number as nomor_identitas'
-                    ])
-                    ->first() 
-                : 
-                $dataAssignment;
-
             setlocale(LC_TIME, 'id_ID');
             \Carbon\Carbon::setLocale('id');
             $date_st = Carbon::parse($assignment->date_st)->isoFormat('D MMMM Y');
@@ -332,9 +290,5 @@ class PrintController extends Controller
 
             return response()->file(storage_path('app/' . $filename), $headers)->deleteFileAfterSend(true);
         }
-
-        // $startDate = Carbon::parse($data->departure_date);
-        // $endDate = Carbon::parse($data->return_date);
-        // $duration = $startDate->diffInDays($endDate);
     }
 }
