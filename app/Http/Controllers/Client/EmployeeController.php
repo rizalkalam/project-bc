@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Models\User;
+use App\Models\Backup;
 use App\Models\Employee;
 use App\Models\Assignment;
 use Illuminate\Http\Request;
@@ -214,6 +215,11 @@ class EmployeeController extends Controller
     public function delete($id){
         $employee = User::where('id', $id)->first();
         $assignment = Assignment::where('user_id', $id)->delete();
+
+        $backup = Backup::where('user_id', $id)->update([
+            "employee_status" => "blank"
+        ]);
+
         $employee->delete();
 
         return response()->json([

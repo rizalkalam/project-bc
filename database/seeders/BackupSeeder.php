@@ -18,52 +18,19 @@ class BackupSeeder extends Seeder
         $assignment1 = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-        ->where('assignments.id', 1)->select([
-            'assignments.*', 
-            'users.name as employee',
-            'users.rank as pangkatPeg',
-            'users.gol_room as golPeg',
-            'users.position as jabPeg',
-            'users.emp_id as nip_peg',
-            'ppk.name as ppk',
-            'ppk.emp_id as nip_ppk',
-            'head_officer.name as head_officer',
-            'assignments.identity_number as nomor_identitas'
-        ])
+        ->where('assignments.id', 1)
         ->get();
 
         $assignment2 = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-        ->where('assignments.id', 2)->select([
-            'assignments.*', 
-            'users.name as employee',
-            'users.rank as pangkatPeg',
-            'users.gol_room as golPeg',
-            'users.position as jabPeg',
-            'users.emp_id as nip_peg',
-            'ppk.name as ppk',
-            'ppk.emp_id as nip_ppk',
-            'head_officer.name as head_officer',
-            'assignments.identity_number as nomor_identitas'
-        ])
+        ->where('assignments.id', 2)
         ->get();
 
         $assignment3 = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-        ->where('assignments.id', 3)->select([
-            'assignments.*', 
-            'users.name as employee',
-            'users.rank as pangkatPeg',
-            'users.gol_room as golPeg',
-            'users.position as jabPeg',
-            'users.emp_id as nip_peg',
-            'ppk.name as ppk',
-            'ppk.emp_id as nip_ppk',
-            'head_officer.name as head_officer',
-            'assignments.identity_number as nomor_identitas'
-        ])
+        ->where('assignments.id', 3)
         ->get();
         
         $data = [
@@ -101,6 +68,7 @@ class BackupSeeder extends Seeder
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment1->first()->pangkatPeg,
@@ -108,7 +76,8 @@ class BackupSeeder extends Seeder
                 'jabPeg' => $assignment1->first()->jabPeg,
                 'nip_ppk' => $assignment1->first()->nip_ppk,
                 'nip_peg' => $assignment1->first()->nip_peg,
-                'employee' => $assignment1->first()->employee
+                'employee' => $assignment1->first()->employee,
+                'nama_pej' => $assignment1->first()->name,
             ], 
             
             [
@@ -145,6 +114,7 @@ class BackupSeeder extends Seeder
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment2->first()->pangkatPeg,
@@ -152,7 +122,8 @@ class BackupSeeder extends Seeder
                 'jabPeg' => $assignment2->first()->jabPeg,
                 'nip_ppk' => $assignment2->first()->nip_ppk,
                 'nip_peg' => $assignment2->first()->nip_peg,
-                'employee' => $assignment2->first()->employee
+                'employee' => $assignment2->first()->employee,
+                'nama_pej' => $assignment2->first()->name,
             ],
             [
                 'id'=>3,
@@ -188,6 +159,7 @@ class BackupSeeder extends Seeder
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment3->first()->pangkatPeg,
@@ -195,7 +167,8 @@ class BackupSeeder extends Seeder
                 'jabPeg' => $assignment3->first()->jabPeg,
                 'nip_ppk' => $assignment3->first()->nip_ppk,
                 'nip_peg' => $assignment3->first()->nip_peg,
-                'employee' => $assignment3->first()->employee
+                'employee' => $assignment3->first()->employee,
+                'nama_pej' => $assignment3->first()->name,
             ],
         ];
 

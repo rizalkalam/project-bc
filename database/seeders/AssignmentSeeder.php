@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Assignment;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
@@ -15,13 +16,15 @@ class AssignmentSeeder extends Seeder
      */
     public function run(): void
     {
+        $ppk_id = 3;
+        $head_officer = 5;
         $data = [
             [
                 'id'=>1,
                 'identity_number'=>123,
                 'user_id'=>2,
-                'ppk'=>3,
-                'head_officer'=>5,
+                'ppk'=> $ppk_id,
+                'head_officer'=> $head_officer,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
                 'ndreq_st'=>'ND-123/2023',
@@ -46,18 +49,28 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>'Sragen',
                 'destination_city_3'=>null,
-                'transportation'=>'Transportasi Umum',
+                'transportation'=>'Becak',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
+
+                //untuk mengatasi id user/pegawai sudah tidak tersedia
+                'jabPeg' => User::find(2)->position,
+                'pangkatPeg' => User::find(2)->rank,
+                'golPeg' => User::find(2)->gol_room,
+                'nip_peg' => User::find(2)->emp_id,
+                'nip_ppk' => User::find($ppk_id)->emp_id,
+                'employee' => User::find(2)->name,
+                'nama_pej' => User::find($head_officer)->name,
             ], 
             
             [
                 'id'=>2,
                 'identity_number'=>234,
-                'user_id'=>2,
-                'ppk'=>3,
-                'head_officer'=>5,
+                'user_id'=>4,
+                'ppk'=> $ppk_id,
+                'head_officer'=> $head_officer,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
                 'ndreq_st'=>'ND-123/2023',
@@ -82,17 +95,27 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>null,
                 'destination_city_3'=>null,
-                'transportation'=>'Transportasi Umum',
+                'transportation'=>'Becak',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
+
+                //untuk mengatasi id user/pegawai sudah tidak tersedia
+                'jabPeg' => User::find(4)->position,
+                'pangkatPeg' => User::find(4)->rank,
+                'golPeg' => User::find(4)->gol_room,
+                'nip_peg' => User::find(4)->emp_id,
+                'nip_ppk' => User::find($ppk_id)->emp_id,
+                'employee' => User::find(4)->name,
+                'nama_pej' => User::find($head_officer)->name,
             ],
             [
                 'id'=>3,
                 'identity_number'=>234,
-                'user_id'=>5,
-                'ppk'=>3,
-                'head_officer'=>5,
+                'user_id'=>6,
+                'ppk'=> $ppk_id,
+                'head_officer'=> $head_officer,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
                 'ndreq_st'=>'ND-123/2023',
@@ -117,10 +140,20 @@ class AssignmentSeeder extends Seeder
                 'destination_city_1'=>'Semarang',
                 'destination_city_2'=>null,
                 'destination_city_3'=>null,
-                'transportation'=>'Transportasi Umum',
+                'transportation'=>'Becak',
                 'signature'=>'KunawKunawi_196907171996031001i_',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
+
+                //untuk mengatasi id user/pegawai sudah tidak tersedia
+                'jabPeg' => User::find(6)->position,
+                'pangkatPeg' => User::find(6)->rank,
+                'golPeg' => User::find(6)->gol_room,
+                'nip_peg' => User::find(6)->emp_id,
+                'nip_ppk' => User::find($ppk_id)->emp_id,
+                'employee' => User::find(6)->name,
+                'nama_pej' => User::find($head_officer)->name,
             ],
         ];
 

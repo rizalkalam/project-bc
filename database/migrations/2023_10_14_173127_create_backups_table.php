@@ -45,8 +45,11 @@ return new class extends Migration
             $table->string('destination_city_5')->nullable();
             $table->string('transportation')->nullable();//Kendaraan umum, Kendaraan dinas
             $table->string('signature')->nullable();
+
+            //untuk memberikan tanda kalau user_id sdh kosong
+            $table->enum('employee_status', ['core', 'blank'])->nullable();
             
-            //tambahan dari assignment
+            //untuk mengatasi id user/pegawai sudah tidak tersedia
             $table->string('jabPeg')->nullable();
             $table->string('pangkatPeg')->nullable();
             $table->string('golPeg')->nullable();
