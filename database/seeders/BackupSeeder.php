@@ -19,18 +19,30 @@ class BackupSeeder extends Seeder
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
         ->where('assignments.id', 1)
+        ->select([
+            'assignments.*', 
+            'ppk.name as ppk',
+        ])
         ->get();
 
         $assignment2 = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
         ->where('assignments.id', 2)
+        ->select([
+            'assignments.*', 
+            'ppk.name as ppk',
+        ])
         ->get();
 
         $assignment3 = Assignment::join('users', 'users.id', 'assignments.user_id')
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
         ->where('assignments.id', 3)
+        ->select([
+            'assignments.*', 
+            'ppk.name as ppk',
+        ])
         ->get();
         
         $data = [
@@ -77,7 +89,7 @@ class BackupSeeder extends Seeder
                 'nip_ppk' => $assignment1->first()->nip_ppk,
                 'nip_peg' => $assignment1->first()->nip_peg,
                 'employee' => $assignment1->first()->employee,
-                'nama_pej' => $assignment1->first()->name,
+                'nama_pej' => $assignment1->first()->nama_pej,
             ], 
             
             [
@@ -123,7 +135,7 @@ class BackupSeeder extends Seeder
                 'nip_ppk' => $assignment2->first()->nip_ppk,
                 'nip_peg' => $assignment2->first()->nip_peg,
                 'employee' => $assignment2->first()->employee,
-                'nama_pej' => $assignment2->first()->name,
+                'nama_pej' => $assignment2->first()->nama_pej,
             ],
             [
                 'id'=>3,
@@ -168,7 +180,7 @@ class BackupSeeder extends Seeder
                 'nip_ppk' => $assignment3->first()->nip_ppk,
                 'nip_peg' => $assignment3->first()->nip_peg,
                 'employee' => $assignment3->first()->employee,
-                'nama_pej' => $assignment3->first()->name,
+                'nama_pej' => $assignment3->first()->nama_pej,
             ],
         ];
 

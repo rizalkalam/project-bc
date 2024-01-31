@@ -30,6 +30,12 @@ class AssignmentController extends Controller
         // ->get();
 
         $data = Assignment::orderBy('assignments.identity_number')
+        ->join('users as ppk', 'ppk.id', 'assignments.ppk')
+        ->select([
+            'assignments.*',
+            'ppk.name as ppk',
+            'nama_pej as head_officer'
+        ])
         ->get();
 
         $data->makeHidden('identity_number');
@@ -93,7 +99,8 @@ class AssignmentController extends Controller
     {
         $data = Backup::select([
             'backups.*',
-            'backups.identity_number as nomor_identitas'
+            'backups.identity_number as nomor_identitas',
+            'nama_pej as head_officer',
         ])->get();
 
         $data->makeHidden('identity_number');
