@@ -16,17 +16,20 @@ class AssignmentController extends Controller
 {
     public function index()
     {
-        $data = Assignment::join('users', 'users.id', 'assignments.user_id')
-        ->join('users as ppk', 'ppk.id', 'assignments.ppk')
-        ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
-        ->orderBy('assignments.identity_number')
-        ->select([
-            'assignments.*', 
-            'users.name as employee',
-            'ppk.name as ppk',
-            'head_officer.name as head_officer',
-            'assignments.identity_number as nomor_identitas'
-        ])
+        // $data = Assignment::join('users', 'users.id', 'assignments.user_id')
+        // ->join('users as ppk', 'ppk.id', 'assignments.ppk')
+        // ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+        // ->orderBy('assignments.identity_number')
+        // ->select([
+        //     'assignments.*', 
+        //     'users.name as employee',
+        //     'ppk.name as ppk',
+        //     'head_officer.name as head_officer',
+        //     'assignments.identity_number as nomor_identitas'
+        // ])
+        // ->get();
+
+        $data = Assignment::orderBy('assignments.identity_number')
         ->get();
 
         $data->makeHidden('identity_number');
@@ -490,50 +493,98 @@ class AssignmentController extends Controller
     {
         $backup = Backup::where('id', $id)->get();
 
-        $dataBackup = [
-            'user_id' => $backup->first()->user_id,
-            'identity_number' =>$backup->first()->identity_number,
-            'ppk' => $backup->first()->ppk,
-            'head_officer' => $backup->first()->head_officer,
-            'unit' => $backup->first()->unit,
-            'ndreq_st' => $backup->first()->ndreq_st,
-            'no_st' => $backup->first()->no_st,
-            'nomor_st' => 'ST-' . $backup->first()->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $backup->first()->nomor_st : '',
-            'date_st' => $backup->first()->date_st,
-            'no_spd' => $backup->first()->no_spd,
-            'date_spd' => $backup->first()->date_spd,
-            'departure_date' => $backup->first()->departure_date,
-            'return_date' => $backup->first()->return_date,
-            'dipa_search' => $backup->first()->dipa_search,
-            'tagging_status'=> $backup->first()->tagging_status,
-            'plt' => $backup->first()->plt,
-            'plh' => $backup->first()->plh,
-            'disbursement' => $backup->first()->disbursement,
-            'no_spyt' => $backup->first()->no_spyt,
-            'implementation_tasks' => $backup->first()->implementation_tasks,
-            'business_trip_reason' => $backup->first()->business_trip_reason,
-            'destination_office' => $backup->first()->kantor_tujuan_tugas,
-            'city_origin' => $backup->first()->kota_asal_tugas,
-            'destination_city_1' => $backup->first()->destination_city_1 !== null ? $backup->first()->destination_city_1 : " ",
-            'destination_city_2' => $backup->first()->destination_city_2 !== null ? $backup->first()->destination_city_2 : " ",
-            'destination_city_3' => $backup->first()->destination_city_3 !== null ? $backup->first()->destination_city_3 : " ",
-            'destination_city_4' => $backup->first()->destination_city_4 !== null ? $backup->first()->destination_city_4 : " ",
-            'destination_city_5' => $backup->first()->destination_city_5 !== null ? $backup->first()->destination_city_5 : " ",
-            'transportation' => $backup->first()->transportation,
-            'signature' => $backup->first()->signature,
-            'created_at' => $backup->first()->created_at,
-            'updated_at' => $backup->first()->updated_at,
-
-            //untuk mengatasi id user/pegawai sudah tidak tersedia
-            'jabPeg' => $backup->first()->jabPeg,
-            'pangkatPeg' => $backup->first()->pangkatPeg,
-            'golPeg' => $backup->first()->golPeg,
-            'nip_peg' => $backup->first()->nip_peg,
-            'nip_ppk' => $backup->first()->nip_ppk,
-            'employee' => $backup->first()->employee,
-            'nama_pej' => $backup->first()->nama_pej,
-        ];
-
+        if ($backup->first()->employee_status == "blank") {
+            $dataBackup = [
+                'user_id' => $backup->first()->user_id,
+                'identity_number' =>$backup->first()->identity_number,
+                'ppk' => $backup->first()->ppk,
+                'head_officer' => $backup->first()->head_officer,
+                'unit' => $backup->first()->unit,
+                'ndreq_st' => $backup->first()->ndreq_st,
+                'no_st' => $backup->first()->no_st,
+                'nomor_st' => 'ST-' . $backup->first()->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $backup->first()->nomor_st : '',
+                'date_st' => $backup->first()->date_st,
+                'no_spd' => $backup->first()->no_spd,
+                'date_spd' => $backup->first()->date_spd,
+                'departure_date' => $backup->first()->departure_date,
+                'return_date' => $backup->first()->return_date,
+                'dipa_search' => $backup->first()->dipa_search,
+                'tagging_status'=> $backup->first()->tagging_status,
+                'plt' => $backup->first()->plt,
+                'plh' => $backup->first()->plh,
+                'disbursement' => $backup->first()->disbursement,
+                'no_spyt' => $backup->first()->no_spyt,
+                'implementation_tasks' => $backup->first()->implementation_tasks,
+                'business_trip_reason' => $backup->first()->business_trip_reason,
+                'destination_office' => $backup->first()->kantor_tujuan_tugas,
+                'city_origin' => $backup->first()->kota_asal_tugas,
+                'destination_city_1' => $backup->first()->destination_city_1 !== null ? $backup->first()->destination_city_1 : " ",
+                'destination_city_2' => $backup->first()->destination_city_2 !== null ? $backup->first()->destination_city_2 : " ",
+                'destination_city_3' => $backup->first()->destination_city_3 !== null ? $backup->first()->destination_city_3 : " ",
+                'destination_city_4' => $backup->first()->destination_city_4 !== null ? $backup->first()->destination_city_4 : " ",
+                'destination_city_5' => $backup->first()->destination_city_5 !== null ? $backup->first()->destination_city_5 : " ",
+                'transportation' => $backup->first()->transportation,
+                'signature' => $backup->first()->signature,
+                'created_at' => $backup->first()->created_at,
+                'updated_at' => $backup->first()->updated_at,
+                'employee_status' => 'blank',
+    
+                //untuk mengatasi id user/pegawai sudah tidak tersedia
+                'jabPeg' => $backup->first()->jabPeg,
+                'pangkatPeg' => $backup->first()->pangkatPeg,
+                'golPeg' => $backup->first()->golPeg,
+                'nip_peg' => $backup->first()->nip_peg,
+                'nip_ppk' => $backup->first()->nip_ppk,
+                'employee' => $backup->first()->employee,
+                'nama_pej' => $backup->first()->nama_pej,
+            ];    
+        } else {
+            $dataBackup = [
+                'user_id' => $backup->first()->user_id,
+                'identity_number' =>$backup->first()->identity_number,
+                'ppk' => $backup->first()->ppk,
+                'head_officer' => $backup->first()->head_officer,
+                'unit' => $backup->first()->unit,
+                'ndreq_st' => $backup->first()->ndreq_st,
+                'no_st' => $backup->first()->no_st,
+                'nomor_st' => 'ST-' . $backup->first()->no_st . '/KBC.1002/' . Carbon::now()->format('Y') !== 'ST-/KBC.1002/2023' ? $backup->first()->nomor_st : '',
+                'date_st' => $backup->first()->date_st,
+                'no_spd' => $backup->first()->no_spd,
+                'date_spd' => $backup->first()->date_spd,
+                'departure_date' => $backup->first()->departure_date,
+                'return_date' => $backup->first()->return_date,
+                'dipa_search' => $backup->first()->dipa_search,
+                'tagging_status'=> $backup->first()->tagging_status,
+                'plt' => $backup->first()->plt,
+                'plh' => $backup->first()->plh,
+                'disbursement' => $backup->first()->disbursement,
+                'no_spyt' => $backup->first()->no_spyt,
+                'implementation_tasks' => $backup->first()->implementation_tasks,
+                'business_trip_reason' => $backup->first()->business_trip_reason,
+                'destination_office' => $backup->first()->kantor_tujuan_tugas,
+                'city_origin' => $backup->first()->kota_asal_tugas,
+                'destination_city_1' => $backup->first()->destination_city_1 !== null ? $backup->first()->destination_city_1 : " ",
+                'destination_city_2' => $backup->first()->destination_city_2 !== null ? $backup->first()->destination_city_2 : " ",
+                'destination_city_3' => $backup->first()->destination_city_3 !== null ? $backup->first()->destination_city_3 : " ",
+                'destination_city_4' => $backup->first()->destination_city_4 !== null ? $backup->first()->destination_city_4 : " ",
+                'destination_city_5' => $backup->first()->destination_city_5 !== null ? $backup->first()->destination_city_5 : " ",
+                'transportation' => $backup->first()->transportation,
+                'signature' => $backup->first()->signature,
+                'created_at' => $backup->first()->created_at,
+                'updated_at' => $backup->first()->updated_at,
+                'employee_status' => 'core',
+    
+                //untuk mengatasi id user/pegawai sudah tidak tersedia
+                'jabPeg' => $backup->first()->jabPeg,
+                'pangkatPeg' => $backup->first()->pangkatPeg,
+                'golPeg' => $backup->first()->golPeg,
+                'nip_peg' => $backup->first()->nip_peg,
+                'nip_ppk' => $backup->first()->nip_ppk,
+                'employee' => $backup->first()->employee,
+                'nama_pej' => $backup->first()->nama_pej,
+            ];    
+        }
+        
         try {
             $existingData = Assignment::where('identity_number', $backup->first()->identity_number)
                 ->where('user_id', $backup->first()->user_id)

@@ -83,7 +83,7 @@ class BackupSeeder extends Seeder
             [
                 'id'=>2,
                 'identity_number'=>234,
-                'user_id'=>2,
+                'user_id'=>4,
                 'ppk'=>$assignment2->first()->ppk,
                 'head_officer'=>5,
                 // 'unit_id'=>1,
@@ -128,7 +128,7 @@ class BackupSeeder extends Seeder
             [
                 'id'=>3,
                 'identity_number'=>234,
-                'user_id'=>5,
+                'user_id'=>6,
                 'ppk'=>$assignment3->first()->ppk,
                 'head_officer'=>5,
                 // 'unit_id'=>1,
