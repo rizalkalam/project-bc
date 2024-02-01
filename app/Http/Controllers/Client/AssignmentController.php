@@ -33,7 +33,7 @@ class AssignmentController extends Controller
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->select([
             'assignments.*',
-            'ppk.name as ppk',
+            'nama_ppk as ppk',
             'nama_pej as head_officer'
         ])
         ->get();
@@ -101,6 +101,7 @@ class AssignmentController extends Controller
             'backups.*',
             'backups.identity_number as nomor_identitas',
             'nama_pej as head_officer',
+            'nama_ppk as ppk'
         ])->get();
 
         $data->makeHidden('identity_number');
@@ -113,19 +114,12 @@ class AssignmentController extends Controller
 
     public function show_assignment($id)
     {
-        $data = Assignment::join('users as employee', 'employee.id', 'assignments.user_id')
-        ->join('users as ppk', 'ppk.id', 'assignments.ppk')
-        ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+        $data = Assignment::join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->where('assignments.id', $id)
         ->select([
-            'assignments.*', 
-            'employee.id as id_pegawai',
-            'employee.name as employee',
-            'assignments.identity_number as nomor_identitas',
-            'ppk.id as id_ppk',
-            'ppk.name as ppk',
-            'head_officer.id as id_head_officer',
-            'head_officer.name as head_officer'
+            'assignments.*',
+            'nama_ppk as ppk',
+            'nama_pej as head_officer'
         ])
         ->first();
 
@@ -185,13 +179,14 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::find($request->get('user_id'))->position,
-                    'pangkatPeg' => User::find($request->get('user_id'))->rank,
-                    'golPeg' => User::find($request->get('user_id'))->gol_room,
-                    'nip_peg' => User::find($request->get('user_id'))->emp_id,
-                    'nip_ppk' => User::find($request->get('ppk'))->emp_id,
-                    'employee' => User::find($request->get('user_id'))->name,
-                    'nama_pej' => User::find($request->get('head_officer'))->name,
+                    'jabPeg' => User::find($request->get('id_pegawai'))->position,
+                    'pangkatPeg' => User::find($request->get('id_pegawai'))->rank,
+                    'golPeg' => User::find($request->get('id_pegawai'))->gol_room,
+                    'nip_peg' => User::find($request->get('id_pegawai'))->emp_id,
+                    'nip_ppk' => User::find($request->get('id_ppk'))->emp_id,
+                    'employee' => User::find($request->get('id_pegawai'))->name,
+                    'nama_pej' => User::find($head_office->id)->name,
+                    'nama_ppk' => User::find($request->get('id_ppk'))->name,
                 ];
             } else {
                 $requestData = [
@@ -229,13 +224,14 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::find($request->get('user_id'))->position,
-                    'pangkatPeg' => User::find($request->get('user_id'))->rank,
-                    'golPeg' => User::find($request->get('user_id'))->gol_room,
-                    'nip_peg' => User::find($request->get('user_id'))->emp_id,
-                    'nip_ppk' => User::find($request->get('ppk'))->emp_id,
-                    'employee' => User::find($request->get('user_id'))->name,
-                    'nama_pej' => User::find($request->get('head_officer'))->name,
+                    'jabPeg' => User::find($request->get('id_pegawai'))->position,
+                    'pangkatPeg' => User::find($request->get('id_pegawai'))->rank,
+                    'golPeg' => User::find($request->get('id_pegawai'))->gol_room,
+                    'nip_peg' => User::find($request->get('id_pegawai'))->emp_id,
+                    'nip_ppk' => User::find($request->get('id_ppk'))->emp_id,
+                    'employee' => User::find($request->get('id_pegawai'))->name,
+                    'nama_pej' => User::find($head_office->id)->name,
+                    'nama_ppk' => User::find($request->get('id_ppk'))->name,
                 ];
             }
             try {
@@ -266,6 +262,7 @@ class AssignmentController extends Controller
                         'users.gol_room as golPeg',
                         'users.position as jabPeg',
                         'ppk.name as ppk',
+                        'ppk.id as ppk_id',
                         'ppk.emp_id as nip_ppk',
                         'head_officer.name as namaPej',
                         'head_officer.emp_id as nipPej'
@@ -274,13 +271,14 @@ class AssignmentController extends Controller
 
                     $reqBackup = $requestData;
                     $reqBackup['employee'] = $data_assignment->first()->employee;
-                    $reqBackup['ppk'] = $data_assignment->first()->ppk;
+                    $reqBackup['ppk'] = $data_assignment->first()->ppk_id;
                     $reqBackup['jabPeg'] = $data_assignment->first()->jabPeg;
                     $reqBackup['pangkatPeg'] = $data_assignment->first()->pangkatPeg;
                     $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
                     $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
                     $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
                     $reqBackup['nama_pej'] = $data_assignment->first()->namaPej;
+                    $reqBackup['nama_ppk'] = $data_assignment->first()->ppk;
 
                     $backup = Backup::create($reqBackup);
 
@@ -366,13 +364,14 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::find($request->get('user_id'))->position,
-                    'pangkatPeg' => User::find($request->get('user_id'))->rank,
-                    'golPeg' => User::find($request->get('user_id'))->gol_room,
-                    'nip_peg' => User::find($request->get('user_id'))->emp_id,
-                    'nip_ppk' => User::find($request->get('ppk'))->emp_id,
-                    'employee' => User::find($request->get('user_id'))->name,
-                    'nama_pej' => User::find($request->get('head_officer'))->name,
+                    // 'jabPeg' => User::find($request->get('user_id'))->position,
+                    // 'pangkatPeg' => User::find($request->get('user_id'))->rank,
+                    // 'golPeg' => User::find($request->get('user_id'))->gol_room,
+                    // 'nip_peg' => User::find($request->get('user_id'))->emp_id,
+                    // 'employee' => User::find($request->get('user_id'))->name,
+                    // 'nip_ppk' => User::find($request->get('ppk'))->emp_id,
+                    // 'nama_pej' => User::find($request->get('head_officer'))->name,
+                    // 'nama_ppk' => User::find($request->get('ppk'))->name,
                 ];
             } else {
                 $requestST = [
@@ -416,13 +415,14 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::find($request->get('user_id'))->position,
-                    'pangkatPeg' => User::find($request->get('user_id'))->rank,
-                    'golPeg' => User::find($request->get('user_id'))->gol_room,
-                    'nip_peg' => User::find($request->get('user_id'))->emp_id,
-                    'nip_ppk' => User::find($request->get('ppk'))->emp_id,
-                    'employee' => User::find($request->get('user_id'))->name,
-                    'nama_pej' => User::find($request->get('head_officer'))->name,
+                    // 'jabPeg' => User::find($request->get('user_id'))->position,
+                    // 'pangkatPeg' => User::find($request->get('user_id'))->rank,
+                    // 'golPeg' => User::find($request->get('user_id'))->gol_room,
+                    // 'nip_peg' => User::find($request->get('user_id'))->emp_id,
+                    // 'employee' => User::find($request->get('user_id'))->name,
+                    // 'nip_ppk' => User::find($request->get('ppk'))->emp_id,
+                    // 'nama_pej' => User::find($request->get('head_officer'))->name,
+                    // 'nama_ppk' => User::find($request->get('ppk'))->name,
                 ];
             }
     
@@ -457,6 +457,7 @@ class AssignmentController extends Controller
                 $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
                 $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
                 $reqBackup['nama_pej'] = $data_assignment->first()->namaPej;
+                $reqBackup['nama_ppk'] = $data_assignment->first()->ppk;
 
                 $backup = Backup::where('backups.id', $id)->update($reqBackup);
                 
@@ -488,6 +489,15 @@ class AssignmentController extends Controller
     public function delete($id)
     {
         $assignment = Assignment::where('id', $id)->first();
+
+        $id_backup = Backup::where('identity_number', $assignment->identity_number)
+        ->where('user_id', $assignment->user_id)
+        ->first();
+
+        $backup = Backup::where('id', $id_backup->id)->update([
+            "availability_status" => "not_yet"
+        ]);
+
         $assignment->delete();
         
         return response()->json([
@@ -544,6 +554,7 @@ class AssignmentController extends Controller
                 'nip_ppk' => $backup->first()->nip_ppk,
                 'employee' => $backup->first()->employee,
                 'nama_pej' => $backup->first()->nama_pej,
+                'nama_ppk' => $backup->first()->nama_ppk,
             ];    
         } else {
             $dataBackup = [
@@ -589,6 +600,7 @@ class AssignmentController extends Controller
                 'nip_ppk' => $backup->first()->nip_ppk,
                 'employee' => $backup->first()->employee,
                 'nama_pej' => $backup->first()->nama_pej,
+                'nama_ppk' => $backup->first()->nama_ppk,
             ];    
         }
         

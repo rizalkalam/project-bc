@@ -21,7 +21,7 @@ class BackupSeeder extends Seeder
         ->where('assignments.id', 1)
         ->select([
             'assignments.*', 
-            'ppk.name as ppk',
+            'ppk.id as ppk_id',
         ])
         ->get();
 
@@ -31,7 +31,7 @@ class BackupSeeder extends Seeder
         ->where('assignments.id', 2)
         ->select([
             'assignments.*', 
-            'ppk.name as ppk',
+            'ppk.id as ppk_id',
         ])
         ->get();
 
@@ -41,7 +41,7 @@ class BackupSeeder extends Seeder
         ->where('assignments.id', 3)
         ->select([
             'assignments.*', 
-            'ppk.name as ppk',
+            'ppk.id as ppk_id',
         ])
         ->get();
         
@@ -50,7 +50,7 @@ class BackupSeeder extends Seeder
                 'id'=>1,
                 'identity_number'=>123,
                 'user_id'=>2,
-                'ppk'=>$assignment1->first()->ppk,
+                'ppk'=>$assignment1->first()->ppk_id,
                 'head_officer'=>5,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
@@ -81,6 +81,7 @@ class BackupSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment1->first()->pangkatPeg,
@@ -90,13 +91,14 @@ class BackupSeeder extends Seeder
                 'nip_peg' => $assignment1->first()->nip_peg,
                 'employee' => $assignment1->first()->employee,
                 'nama_pej' => $assignment1->first()->nama_pej,
+                'nama_ppk' => $assignment1->first()->nama_ppk,
             ], 
             
             [
                 'id'=>2,
                 'identity_number'=>234,
                 'user_id'=>4,
-                'ppk'=>$assignment2->first()->ppk,
+                'ppk'=>$assignment2->first()->ppk_id,
                 'head_officer'=>5,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
@@ -127,6 +129,7 @@ class BackupSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment2->first()->pangkatPeg,
@@ -136,12 +139,13 @@ class BackupSeeder extends Seeder
                 'nip_peg' => $assignment2->first()->nip_peg,
                 'employee' => $assignment2->first()->employee,
                 'nama_pej' => $assignment2->first()->nama_pej,
+                'nama_ppk' => $assignment2->first()->nama_ppk,
             ],
             [
                 'id'=>3,
                 'identity_number'=>234,
                 'user_id'=>6,
-                'ppk'=>$assignment3->first()->ppk,
+                'ppk'=>$assignment3->first()->ppk_id,
                 'head_officer'=>5,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
@@ -172,6 +176,7 @@ class BackupSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //tambahan assignment
                 'pangkatPeg' => $assignment3->first()->pangkatPeg,
@@ -181,6 +186,7 @@ class BackupSeeder extends Seeder
                 'nip_peg' => $assignment3->first()->nip_peg,
                 'employee' => $assignment3->first()->employee,
                 'nama_pej' => $assignment3->first()->nama_pej,
+                'nama_ppk' => $assignment3->first()->nama_ppk,
             ],
         ];
 

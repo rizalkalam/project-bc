@@ -54,6 +54,7 @@ class AssignmentSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //untuk mengatasi id user/pegawai sudah tidak tersedia
                 'jabPeg' => User::find(2)->position,
@@ -63,6 +64,7 @@ class AssignmentSeeder extends Seeder
                 'nip_ppk' => User::find($ppk_id)->emp_id,
                 'employee' => User::find(2)->name,
                 'nama_pej' => User::find($head_officer)->name,
+                'nama_ppk' => User::find($ppk_id)->name,
             ], 
             
             [
@@ -100,6 +102,7 @@ class AssignmentSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //untuk mengatasi id user/pegawai sudah tidak tersedia
                 'jabPeg' => User::find(4)->position,
@@ -109,6 +112,7 @@ class AssignmentSeeder extends Seeder
                 'nip_ppk' => User::find($ppk_id)->emp_id,
                 'employee' => User::find(4)->name,
                 'nama_pej' => User::find($head_officer)->name,
+                'nama_ppk' => User::find($ppk_id)->name,
             ],
             [
                 'id'=>3,
@@ -145,6 +149,7 @@ class AssignmentSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'employee_status' => 'core',
+                'availability_status' => 'available',
 
                 //untuk mengatasi id user/pegawai sudah tidak tersedia
                 'jabPeg' => User::find(6)->position,
@@ -154,6 +159,7 @@ class AssignmentSeeder extends Seeder
                 'nip_ppk' => User::find($ppk_id)->emp_id,
                 'employee' => User::find(6)->name,
                 'nama_pej' => User::find($head_officer)->name,
+                'nama_ppk' => User::find($ppk_id)->name,
             ],
         ];
 

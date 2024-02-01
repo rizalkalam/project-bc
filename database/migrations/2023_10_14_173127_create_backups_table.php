@@ -47,7 +47,10 @@ return new class extends Migration
             $table->string('signature')->nullable();
 
             //untuk memberikan tanda kalau user_id sdh kosong
-            $table->enum('employee_status', ['core', 'blank'])->nullable();
+            $table->enum('employee_status', ['core', 'blank'])->default('core')->nullable();
+
+            //untuk memberikan tanda kalau surat sudah ada pada data inti
+            $table->enum('availability_status', ['available', 'not_yet'])->default('available')->nullable();
             
             //untuk mengatasi id user/pegawai sudah tidak tersedia
             $table->string('jabPeg')->nullable();
@@ -57,6 +60,7 @@ return new class extends Migration
             $table->string('nip_ppk')->nullable();
             $table->string('employee')->nullable();
             $table->string('nama_pej')->nullable();
+            $table->string('nama_ppk')->nullable();
             
             $table->timestamps();
         });
