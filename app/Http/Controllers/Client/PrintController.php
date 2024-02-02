@@ -27,11 +27,11 @@ class PrintController extends Controller
         ->where('assignments.identity_number', $nomor_identitas)
         ->select([
             'assignments.*',
-            'users.name as employee',
-            'users.emp_id as nip_peg',
-            'users.rank as pangkatPeg',
-            'users.gol_room as golPeg',
-            'users.position as jabPeg',
+            // 'users.name as employee',
+            // 'users.emp_id as nip_peg',
+            // 'users.rank as pangkatPeg',
+            // 'users.gol_room as golPeg',
+            // 'users.position as jabPeg',
             'ppk.name as ppk',
             'ppk.emp_id as nip_ppk',
             'head_officer.name as namaPej',
@@ -173,15 +173,14 @@ class PrintController extends Controller
 
     public function print_st($nomor_identitas)
     {
-        $assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
-        ->where('assignments.identity_number', $nomor_identitas)
+        $assignment = Assignment::where('assignments.identity_number', $nomor_identitas)
         ->select([
             'assignments.no_st',
-            'users.name as employee',
-            'users.emp_id as nip_peg',
-            'users.rank as pangkatPeg',
-            'users.position as jabPeg',
-            'users.gol_room as golPeg',
+            'assignments.employee',
+            'assignments.nip_peg',
+            'assignments.pangkatPeg',
+            'assignments.jabPeg',
+            'assignments.golPeg',
             'assignments.date_spd'
         ])
         ->get();

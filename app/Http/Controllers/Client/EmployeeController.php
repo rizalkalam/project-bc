@@ -217,7 +217,8 @@ class EmployeeController extends Controller
         $assignment = Assignment::where('user_id', $id)->delete();
 
         $backup = Backup::where('user_id', $id)->update([
-            "employee_status" => "blank"
+            "employee_status" => "blank",
+            "availability_status" => "not_yet"
         ]);
 
         $employee->delete();

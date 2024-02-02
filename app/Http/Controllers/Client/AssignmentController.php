@@ -33,6 +33,8 @@ class AssignmentController extends Controller
         ->join('users as ppk', 'ppk.id', 'assignments.ppk')
         ->select([
             'assignments.*',
+            'assignments.identity_number as nomor_identitas',
+            'ppk as id_ppk',
             'nama_ppk as ppk',
             'nama_pej as head_officer'
         ])
@@ -118,8 +120,11 @@ class AssignmentController extends Controller
         ->where('assignments.id', $id)
         ->select([
             'assignments.*',
+            'identity_number as nomor_identitas',
             'nama_ppk as ppk',
-            'nama_pej as head_officer'
+            'nama_pej as head_officer',
+            'ppk.id as id_ppk',
+            'head_officer as id_head_officer',
         ])
         ->first();
 
@@ -430,34 +435,23 @@ class AssignmentController extends Controller
                 $data_identity = Assignment::where('id', $id)->first();
                 $data = Assignment::where('assignments.id', $id)->update($requestData);
     
-                $data_assignment = Assignment::join('users', 'users.id', 'assignments.user_id')
-                ->join('users as ppk', 'ppk.id', 'assignments.ppk')
-                ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+                $data_assignment = Assignment::join('users as ppk', 'ppk.id', 'assignments.ppk')
                 ->where('assignments.id', $id)
                 ->select([
                     'assignments.*',
-                    'users.name as employee',
-                    'users.emp_id as nip_peg',
-                    'users.rank as pangkatPeg',
-                    'users.gol_room as golPeg',
-                    'users.position as jabPeg',
-                    'ppk.name as ppk',
-                    'ppk.emp_id as nip_ppk',
-                    'head_officer.name as namaPej',
-                    'head_officer.emp_id as nipPej'
                 ])
-                ->get();
+                ->first();
 
                 $reqBackup = $requestData;
-                $reqBackup['employee'] = $data_assignment->first()->employee;
-                $reqBackup['ppk'] = $data_assignment->first()->ppk;
-                $reqBackup['jabPeg'] = $data_assignment->first()->jabPeg;
-                $reqBackup['pangkatPeg'] = $data_assignment->first()->pangkatPeg;
-                $reqBackup['golPeg'] = $data_assignment->first()->golPeg;
-                $reqBackup['nip_peg'] = $data_assignment->first()->nip_peg;
-                $reqBackup['nip_ppk'] = $data_assignment->first()->nip_ppk;
-                $reqBackup['nama_pej'] = $data_assignment->first()->namaPej;
-                $reqBackup['nama_ppk'] = $data_assignment->first()->ppk;
+                $reqBackup['employee'] = $data_assignment->employee;
+                $reqBackup['ppk'] = $data_assignment->ppk;
+                $reqBackup['jabPeg'] = $data_assignment->jabPeg;
+                $reqBackup['pangkatPeg'] = $data_assignment->pangkatPeg;
+                $reqBackup['golPeg'] = $data_assignment->golPeg;
+                $reqBackup['nip_peg'] = $data_assignment->nip_peg;
+                $reqBackup['nip_ppk'] = $data_assignment->nip_ppk;
+                $reqBackup['nama_pej'] = $data_assignment->namaPej;
+                $reqBackup['nama_ppk'] = $data_assignment->ppk;
 
                 $backup = Backup::where('backups.id', $id)->update($reqBackup);
                 
@@ -545,6 +539,7 @@ class AssignmentController extends Controller
                 'created_at' => $backup->first()->created_at,
                 'updated_at' => $backup->first()->updated_at,
                 'employee_status' => 'blank',
+                'availability_status' => 'available',
     
                 //untuk mengatasi id user/pegawai sudah tidak tersedia
                 'jabPeg' => $backup->first()->jabPeg,
@@ -591,6 +586,7 @@ class AssignmentController extends Controller
                 'created_at' => $backup->first()->created_at,
                 'updated_at' => $backup->first()->updated_at,
                 'employee_status' => 'core',
+                'availability_status' => 'available',
     
                 //untuk mengatasi id user/pegawai sudah tidak tersedia
                 'jabPeg' => $backup->first()->jabPeg,
@@ -616,6 +612,7 @@ class AssignmentController extends Controller
                 ], 500);
             } else {
                 $data = Assignment::create($dataBackup);
+                $dataBackup = Backup::where('id', $backup->first()->id)->update(['availability_status' => 'available']);
 
                 return response()->json([
                     'message' => 'Data Backup success recore',
