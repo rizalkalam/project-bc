@@ -44,6 +44,16 @@ class BackupSeeder extends Seeder
             'ppk.id as ppk_id',
         ])
         ->get();
+
+        $assignment4 = Assignment::join('users', 'users.id', 'assignments.user_id')
+        ->join('users as ppk', 'ppk.id', 'assignments.ppk')
+        ->join('users as head_officer', 'head_officer.id', 'assignments.head_officer')
+        ->where('assignments.id', 4)
+        ->select([
+            'assignments.*', 
+            'ppk.id as ppk_id',
+        ])
+        ->get();
         
         $data = [
             [
@@ -51,7 +61,7 @@ class BackupSeeder extends Seeder
                 'identity_number'=>123,
                 'user_id'=>2,
                 'ppk'=>$assignment1->first()->ppk_id,
-                'head_officer'=>5,
+                'head_officer'=>2,
                 // 'unit_id'=>1,
                 'unit'=>'UMUM',
                 'ndreq_st'=>'ND-123/2023',
@@ -64,7 +74,7 @@ class BackupSeeder extends Seeder
                 'return_date'=>'2023-10-13',
                 'dipa_search'=>'Kantor',
                 'plt'=>'plh',
-                'plh'=>'plh',
+                'plh'=>'Plh',
                 'tagging_status'=> 'default',
                 //==================
                 'disbursement'=>'Kantor',
@@ -111,8 +121,8 @@ class BackupSeeder extends Seeder
                 'departure_date'=>'2023-10-13',
                 'return_date'=>'2023-10-14',
                 'dipa_search'=>'Kantor',
-                'plt'=>'plh',
-                'plh'=>'plh',
+                'plt'=>'kosong',
+                'plh'=>' ',
                 'tagging_status'=> 'default',
                 //=================
                 'disbursement'=>'Kantor',
@@ -158,8 +168,8 @@ class BackupSeeder extends Seeder
                 'departure_date'=>'2023-10-13',
                 'return_date'=>'2023-10-14',
                 'dipa_search'=>'Kantor',
-                'plt'=>'plh',
-                'plh'=>'plh',
+                'plt'=>'kosong',
+                'plh'=>' ',
                 'tagging_status'=> 'default',
                 //=================
                 'disbursement'=>'Kantor',
@@ -187,6 +197,53 @@ class BackupSeeder extends Seeder
                 'employee' => $assignment3->first()->employee,
                 'nama_pej' => $assignment3->first()->nama_pej,
                 'nama_ppk' => $assignment3->first()->nama_ppk,
+            ],
+            [
+                'id'=>4,
+                'identity_number'=>333,
+                'user_id'=>5,
+                'ppk'=>$assignment4->first()->ppk_id,
+                'head_officer'=>5,
+                // 'unit_id'=>1,
+                'unit'=>'UMUM',
+                'ndreq_st'=>'ND-123/2023',
+                'no_st'=>'555',
+                'nomor_st'=>'ST-555/KBC.1002/' . Carbon::now()->format('Y'),
+                'date_st'=>'2023-10-13',
+                'no_spd'=>'123',
+                'date_spd'=>'2023-10-13',
+                'departure_date'=>'2023-10-13',
+                'return_date'=>'2023-10-14',
+                'dipa_search'=>'Kantor',
+                'plt'=>'kosong',
+                'plh'=>' ',
+                'tagging_status'=> 'default',
+                //=================
+                'disbursement'=>'Kantor',
+                'no_spyt'=>'',
+                'implementation_tasks'=>'Undangan kegiatan rapat dan seterusnya',
+                'business_trip_reason'=>'Menghadiri undangan rapat koordinasi',
+                'destination_office'=>'Kanwil DJBC Jawa Tengah',
+                'city_origin'=>'Kudus',
+                'destination_city_1'=>'Semarang',
+                'destination_city_2'=>null,
+                'destination_city_3'=>null,
+                'transportation'=>'Becak',
+                'signature'=>'KunawKunawi_196907171996031001i_',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'employee_status' => 'core',
+                'availability_status' => 'available',
+
+                //tambahan assignment
+                'pangkatPeg' => $assignment4->first()->pangkatPeg,
+                'golPeg' => $assignment4->first()->golPeg,
+                'jabPeg' => $assignment4->first()->jabPeg,
+                'nip_ppk' => $assignment4->first()->nip_ppk,
+                'nip_peg' => $assignment4->first()->nip_peg,
+                'employee' => $assignment4->first()->employee,
+                'nama_pej' => $assignment4->first()->nama_pej,
+                'nama_ppk' => $assignment4->first()->nama_ppk,
             ],
         ];
 

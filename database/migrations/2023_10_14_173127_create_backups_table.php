@@ -51,7 +51,13 @@ return new class extends Migration
 
             //untuk memberikan tanda kalau surat sudah ada pada data inti
             $table->enum('availability_status', ['available', 'not_yet'])->default('available')->nullable();
-            
+
+            //untuk memberikan tanda kalau ppk_id sdh kosong
+            $table->enum('ppk_status', ['active', 'non-active'])->default('active')->nullable();
+
+            //untuk memberikan tanda kalau head_officer_id sdh kosong
+            $table->enum('head_officer_status', ['active', 'non-active'])->default('active')->nullable();
+
             //untuk mengatasi id user/pegawai sudah tidak tersedia
             $table->string('jabPeg')->nullable();
             $table->string('pangkatPeg')->nullable();

@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/printst/{nomor_identitas}', [PrintController::class, 'print_st']);
 
         Route::post('/recore/{id}', [AssignmentController::class, 'recore']);
+
+        Route::get('/test/{id}', [AssignmentController::class, 'test']);
         
     })->middleware('CheckRole:ppk, master');
 });
