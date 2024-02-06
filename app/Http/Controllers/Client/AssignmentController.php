@@ -192,13 +192,13 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::where('id', $request->id_pegawai,)->first()->position,
-                    'pangkatPeg' => User::where('id', $request->id_pegawai,)->first()->rank,
-                    'golPeg' => User::where('id', $request->id_pegawai,)->first()->gol_room,
-                    'nip_peg' => User::where('id', $request->id_pegawai,)->first()->emp_id,
+                    'jabPeg' => User::where('id', $request->id_pegawai)->first()->position,
+                    'pangkatPeg' => User::where('id', $request->id_pegawai)->first()->rank,
+                    'golPeg' => User::where('id', $request->id_pegawai)->first()->gol_room,
+                    'nip_peg' => User::where('id', $request->id_pegawai)->first()->emp_id,
                     'nip_ppk' => User::where('id', $request->id_ppk)->first()->emp_id,
-                    'employee' => User::where('id', $request->id_pegawai,)->first()->name,
-                    'nama_pej' => $head_office->name,
+                    'employee' => User::where('id', $request->id_pegawai)->first()->name,
+                    'nama_pej' => User::where('id', $request->penanda_tangan)->first()->name,
                     'nama_ppk' => User::where('id', $request->id_ppk)->first()->name,
                 ];
             } else {
@@ -244,12 +244,12 @@ class AssignmentController extends Controller
                     'updated_at' => Carbon::now(),
 
                     //untuk mengatasi id user/pegawai sudah tidak tersedia
-                    'jabPeg' => User::where('id', $request->id_pegawai,)->first()->position,
-                    'pangkatPeg' => User::where('id', $request->id_pegawai,)->first()->rank,
-                    'golPeg' => User::where('id', $request->id_pegawai,)->first()->gol_room,
-                    'nip_peg' => User::where('id', $request->id_pegawai,)->first()->emp_id,
+                    'jabPeg' => User::where('id', $request->id_pegawai)->first()->position,
+                    'pangkatPeg' => User::where('id', $request->id_pegawai)->first()->rank,
+                    'golPeg' => User::where('id', $request->id_pegawai)->first()->gol_room,
+                    'nip_peg' => User::where('id', $request->id_pegawai)->first()->emp_id,
                     'nip_ppk' => User::where('id', $request->id_ppk)->first()->emp_id,
-                    'employee' => User::where('id', $request->id_pegawai,)->first()->name,
+                    'employee' => User::where('id', $request->id_pegawai)->first()->name,
                     'nama_pej' => $head_office->name,
                     'nama_ppk' => User::where('id', $request->id_ppk)->first()->name,
                 ];
@@ -258,15 +258,23 @@ class AssignmentController extends Controller
                 $identityNumber = Backup::where('identity_number', $request->nomor_identitas)->value('identity_number');
                 $userId = Backup::where('user_id', $request->id_pegawai)->value('user_id');
 
-                $existingData = Backup::where('identity_number', $request->nomor_identitas)
-                ->where('user_id', $request->id_pegawai)
-                ->first();
+                $existingData = DB::transaction(function () use ($request) {
+                    $a = DB::table('assignments')->where('identity_number', $request->nomor_identitas)
+                    ->where('user_id', $request->id_pegawai)->first();
+                    $b = DB::table('backups')->where('identity_number', $request->nomor_identitas)
+                    ->where('user_id', $request->id_pegawai)->first();
+
+                    return [
+                        'a' => $a,
+                        'b' => $b,
+                    ];
+                });
                 
-                if ($existingData) {
+                if ($existingData['a'] !== null || $existingData['b'] !== null) {
                     return response()->json([
                         'message' => 'Conflict',
                         // 'data' => $requestData,
-                    ], 500);
+                    ], 409);
                 } else {
                     $data = Assignment::create($requestData);
     
@@ -305,6 +313,7 @@ class AssignmentController extends Controller
                     return response()->json([
                         'message' => 'Data Assignment success created',
                         'data' => $requestData,    
+                        // 'tes' => $existingData,
                     ], 200);
                 }
             } catch (\Throwable $th) {

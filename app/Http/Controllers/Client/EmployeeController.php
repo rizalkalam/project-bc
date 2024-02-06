@@ -353,7 +353,8 @@ class EmployeeController extends Controller
 
             //update untuk mengatasi assignment milik user lain ketika head_officernya dihapus
             //maka otomatis tergantikan dengan id user lain yang memiliki pangkat kepala/penanda tangan
-            if ($assignmentByHeadOfc->plt == 'kosong') {
+            if ($assignmentByHeadOfc !== null) {
+                if ($assignmentByHeadOfc->plt == 'kosong') {
                     $employee->delete();
 
                     DB::table('assignments')->where('head_officer', $id)->update([
@@ -383,31 +384,40 @@ class EmployeeController extends Controller
                         // 'assignment' => $assignment
                         // 'data' => $ppk->id
                     ]);
-            } 
-            
-            $employee->delete();
-                
-                // update untuk status head_officer
-                DB::table('assignments')->where('head_officer', $id)->update([
-                    "head_officer_status" => "non-active",
-                    "head_officer" => 0,
-                    // "availability_status" => "not_yet"
-                ]);
-                DB::table('backups')->where('head_officer', $id)->update([
-                    "head_officer_status" => "non-active",
-                    "head_officer" => 0,
-                    // "employee_status" => "blank",
-                    // "availability_status" => "not_yet"
-                    // "availability_status" => "not_yet"
-                ]);
-
-                $assignment = Assignment::where('user_id', $id)->delete();
-
-                //update untuk mengatasi ketika id head_officer memiliki assignment
-                Backup::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet"
-                ]);
+                } else {
+                    $employee->delete();
+                        
+                    // update untuk status head_officer
+                    DB::table('assignments')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0,
+                        // "availability_status" => "not_yet"
+                    ]);
+                    DB::table('backups')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0,
+                        // "employee_status" => "blank",
+                        // "availability_status" => "not_yet"
+                        // "availability_status" => "not_yet"
+                    ]);
+    
+                    $assignment = Assignment::where('user_id', $id)->delete();
+    
+                    //update untuk mengatasi ketika id head_officer memiliki assignment
+                    Backup::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet"
+                    ]);
+    
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                        // 'assignment' => $assignment
+                        // 'data' => $ppk->id
+                    ]);
+                }
+            } else {
+                $employee->delete();
 
                 return response()->json([
                     'success' => true,
@@ -415,16 +425,17 @@ class EmployeeController extends Controller
                     // 'assignment' => $assignment
                     // 'data' => $ppk->id
                 ]);
-
+            }
+            
         } elseif ($ppk && $ppk->id !== null) {
             $employee->delete();
 
-            DB::table('assignments')->where('ppk', $ppk->id)->update([
+            DB::table('assignments')->where('ppk', $id)->update([
                 "ppk_status" => "non-active",
                 "ppk" => 0
                 // "availability_status" => "not_yet"
             ]);
-            DB::table('backups')->where('ppk', $ppk->id)->update([
+            DB::table('backups')->where('ppk', $id)->update([
                 "ppk_status" => "non-active",
                 "ppk" => 0,
                 // "employee_status" => "blank",
