@@ -631,12 +631,10 @@ class AssignmentController extends Controller
 
     public function test($id)
     {
-        $user_id = Assignment::where('id', $id)->first()->user_id;
-
-        $data = User::where('id', $user_id)->first()->emp_id;
+        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->get()->count();
         return response()->json([
             'message' => 'test',
-            'data' => $data,    
+            'data' => $countHO,    
         ], 200);
     }
 }

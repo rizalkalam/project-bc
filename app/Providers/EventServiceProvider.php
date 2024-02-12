@@ -18,6 +18,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'eloquent.deleting: User' => [
+            'App\Observers\UserDeletingObserver',
+        ],
     ];
 
     /**
