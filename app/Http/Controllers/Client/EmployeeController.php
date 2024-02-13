@@ -158,20 +158,22 @@ class EmployeeController extends Controller
             ],400);
         }
 
+        $userHO_byid = User::where('id', '=', $id)->first();
+        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+
+        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+            return response()->json([
+                'message' => 'failed',
+                'errors' => 'Pejabat Kepala Kantor Tidak Tersedia!!',
+                'tes' => $userHO_byid
+            ], 420);
+        }
+
         try {
             // $employee = User::where('id', $id)->first();
             
             $employeeRole = Role::where('name', 'biasa')->first();
             $officerRole = Role::where('name', 'ppk')->first();
-
-            $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
-
-            if ($countHO == 1) {
-                return response()->json([
-                    'message' => 'failed',
-                    'errors' => 'Pejabat Kepala Kantor Tidak Tersedia!!',
-                ], 420);
-            }
 
             if ($employeeRole) {
                 $employee = User::whereHas('roles', function ($query) use ($employeeRole, $officerRole) {
@@ -359,33 +361,599 @@ class EmployeeController extends Controller
         $backup = Backup::where('user_id', $id)->first();
         $assignment = Assignment::where('user_id', $id)->first();
 
-        if (empty($employee_id)) {
-            Assignment::where('user_id', $id)->update([
-                "employee_status" => "core",
-                "availability_status" => "available"
-            ]);
-
-            Backup::where('user_id', $id)->update([
-                "employee_status" => "core",
-                "availability_status" => "available"
-            ]);
-        } else {
-            if (!empty($ho_id)) {
-                if (!empty($ppk_id)) {
-                    if ($ho_id->plt == "kosong") {
+        if (empty($assignment)) {
+            if (empty($employee_id)) {
+                Assignment::where('user_id', $id)->update([
+                    "employee_status" => "core",
+                    "availability_status" => "available"
+                ]);
+    
+                Backup::where('user_id', $id)->update([
+                    "employee_status" => "core",
+                    "availability_status" => "available"
+                ]);
+            } else {
+                if (!empty($ho_id)) {
+                    if (!empty($ppk_id)) {
+                        if ($ho_id->plt == "kosong") {
+                            //untuk head_office default
+                            $userHO_byid = User::where('id', '=', $id)->first();
+                            $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                            if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                                return response()->json([
+                                    'success' => false,
+                                    'message' => 'Data head_office tidak ada',
+                                ], 410);
+                            }
+    
+                            $employee->delete();
+                            $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                            ->first();
+    
+                            Assignment::where('ppk', $id)->update([
+                                "ppk_status" => "non-active",
+                                "ppk" => 0
+                            ]);
+                            Backup::where('ppk', $id)->update([
+                                "ppk_status" => "non-active",
+                                "ppk" => 0
+                            ]);
+        
+                            Assignment::where('head_officer', $id)->update([
+                                "head_officer_status" => "active",
+                                "head_officer" => $head_office->id,
+                                "nama_pej" => $head_office->name,
+                                "plt" => "kosong",
+                                "plh" => " "
+                            ]);
+                            Backup::where('head_officer', $id)->update([
+                                "head_officer_status" => "active",
+                                "head_officer" => $head_office->id,
+                                "nama_pej" => $head_office->name,
+                                "plt" => "kosong",
+                                "plh" => " "
+                            ]);
+            
+                            Assignment::where('user_id', $id)->update([
+                                "employee_status" => "blank",
+                                "availability_status" => "not_yet",
+                                "user_id" => 0
+                            ]);
+                
+                            Backup::where('user_id', $id)->update([
+                                "employee_status" => "blank",
+                                "availability_status" => "not_yet",
+                                "user_id" => 0
+                            ]);
+                
+        
+                
+                            return response()->json([
+                                'success' => true,
+                                'message' => 'Delete data success',
+                            ]);
+                        }
+                        //akhir logic plt = kosong
+    
+                        Assignment::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+                        Backup::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+    
+                        Assignment::where('head_officer', $id)->update([
+                            "head_officer_status" => "non-active",
+                            "head_officer" => 0
+                        ]);
+                        Backup::where('head_officer', $id)->update([
+                            "head_officer_status" => "non-active",
+                            "head_officer" => 0
+                        ]);
+        
+                        Assignment::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        Backup::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
                         $employee->delete();
-
+    
+            
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Delete data success',
+                        ]);
+                    }
+                    //akhir logic !empty($ppk_id)
+    
+                    if ($ho_id->plt == "kosong") {
                         //untuk head_office default
-                        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
-                        ->first();
-
-                        if (empty($head_office)) {
+                        $userHO_byid = User::where('id', '=', $id)->first();
+                        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
                             return response()->json([
                                 'success' => false,
                                 'message' => 'Data head_office tidak ada',
                             ], 410);
                         }
+    
+                        $employee->delete();
+                        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                        ->first();
+    
+                        Assignment::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+                        Backup::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+    
+                        Assignment::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+                        Backup::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+        
+                        Assignment::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        Backup::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+    
+            
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Delete data success',
+                        ]);
+                    }
+                    //akhir logic plt = kosong
+    
+                    Assignment::where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+                    Backup::where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+    
+                    Assignment::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    Backup::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    $employee->delete();
 
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic !empty($ho_id)
+    
+                if (!empty($ppk_id)) {
+                    Assignment::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    Backup::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+    
+                    Assignment::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    Backup::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    $employee->delete();
+
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic !empty($ppk_id)
+    
+                Assignment::where('user_id', $id)->update([
+                    "employee_status" => "blank",
+                    "availability_status" => "not_yet",
+                    "user_id" => 0
+                ]);
+    
+                Backup::where('user_id', $id)->update([
+                    "employee_status" => "blank",
+                    "availability_status" => "not_yet",
+                    "user_id" => 0
+                ]);
+    
+                $employee->delete();
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Delete data success',
+                ]);
+            }
+            //akhir logic empty($employee_id)
+    
+            if (empty($ho_id)) {
+                DB::table('assignments')->where('head_officer', $id)->update([
+                    "head_officer_status" => "active",
+                ]);
+                DB::table('backups')->where('head_officer', $id)->update([
+                    "head_officer_status" => "active",
+                ]);
+            } else {
+                if (!empty($ppk_id)) {
+                    if ($ho_id->plt == "kosong") {
+                        //untuk head_office default
+                        $userHO_byid = User::where('id', '=', $id)->first();
+                        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Data head_office tidak ada',
+                            ], 410);
+                        }
+    
+                        $employee->delete();
+                        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                        ->first();
+    
+                        Assignment::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+                        Backup::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+    
+                        Assignment::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+                        Backup::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+        
+                        Assignment::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        Backup::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+    
+            
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Delete data success',
+                        ]);
+                    }
+                    //akhir logic plt = kosong
+    
+                    Assignment::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    Backup::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    
+                    DB::table('assignments')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+                    DB::table('backups')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+        
+                    $employee->delete();
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic !empty($ppk_id)
+    
+                if ($ho_id->plt == "kosong") {
+                    //untuk head_office default
+                    $userHO_byid = User::where('id', '=', $id)->first();
+                    $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                    if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Data head_office tidak ada',
+                        ], 410);
+                    }
+    
+                    $employee->delete();
+                    $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                    ->first();
+    
+                    Assignment::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    Backup::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+    
+                    Assignment::where('head_officer', $id)->update([
+                        "head_officer_status" => "active",
+                        "head_officer" => $head_office->id,
+                        "nama_pej" => $head_office->name,
+                        "plt" => "kosong",
+                        "plh" => " "
+                    ]);
+                    Backup::where('head_officer', $id)->update([
+                        "head_officer_status" => "active",
+                        "head_officer" => $head_office->id,
+                        "nama_pej" => $head_office->name,
+                        "plt" => "kosong",
+                        "plh" => " "
+                    ]);
+    
+                    Assignment::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    Backup::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic plt = kosong
+    
+                DB::table('assignments')->where('head_officer', $id)->update([
+                    "head_officer_status" => "non-active",
+                    "head_officer" => 0
+                ]);
+                DB::table('backups')->where('head_officer', $id)->update([
+                    "head_officer_status" => "non-active",
+                    "head_officer" => 0
+                ]);
+    
+                $employee->delete();
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Delete data success',
+                ]);
+            }
+            //akhir logic empty($ho_id)
+            
+            if (empty($ppk_id)) {
+                DB::table('assignments')->where('ppk', $id)->update([
+                    "ppk_status" => "active",
+                ]);
+                DB::table('backups')->where('ppk', $id)->update([
+                    "ppk_status" => "active",
+                ]);
+            } else {
+                DB::table('assignments')->where('ppk', $id)->update([
+                    "ppk_status" => "non-active",
+                    "ppk" => 0
+                ]);
+                DB::table('backups')->where('ppk', $id)->update([
+                    "ppk_status" => "non-active",
+                    "ppk" => 0
+                ]);
+    
+                $employee->delete();
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Delete data success',
+                ]);
+            }
+            //akhir logic empty($ppk_id)
+        } else {
+            //logic else empty(assignment)
+            if (empty($employee_id)) {
+                Assignment::where('user_id', $id)->update([
+                    "employee_status" => "core",
+                    "availability_status" => "available"
+                ]);
+    
+                Backup::where('user_id', $id)->update([
+                    "employee_status" => "core",
+                    "availability_status" => "available"
+                ]);
+            } else {
+                if (!empty($ho_id)) {
+                    if (!empty($ppk_id)) {
+                        if ($ho_id->plt == "kosong") {
+                            //untuk head_office default
+                            $userHO_byid = User::where('id', '=', $id)->first();
+                            $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                            if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                                return response()->json([
+                                    'success' => false,
+                                    'message' => 'Data head_office tidak ada',
+                                ], 410);
+                            }
+    
+                            $employee->delete();
+                            $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                            ->first();
+    
+                            Assignment::where('ppk', $id)->update([
+                                "ppk_status" => "non-active",
+                                "ppk" => 0
+                            ]);
+                            Backup::where('ppk', $id)->update([
+                                "ppk_status" => "non-active",
+                                "ppk" => 0
+                            ]);
+        
+                            Assignment::where('head_officer', $id)->update([
+                                "head_officer_status" => "active",
+                                "head_officer" => $head_office->id,
+                                "nama_pej" => $head_office->name,
+                                "plt" => "kosong",
+                                "plh" => " "
+                            ]);
+                            Backup::where('head_officer', $id)->update([
+                                "head_officer_status" => "active",
+                                "head_officer" => $head_office->id,
+                                "nama_pej" => $head_office->name,
+                                "plt" => "kosong",
+                                "plh" => " "
+                            ]);
+            
+                            Assignment::where('user_id', $id)->update([
+                                "employee_status" => "blank",
+                                "availability_status" => "not_yet",
+                                "user_id" => 0
+                            ]);
+                
+                            Backup::where('user_id', $id)->update([
+                                "employee_status" => "blank",
+                                "availability_status" => "not_yet",
+                                "user_id" => 0
+                            ]);
+                
+                            $assignment->delete();
+                
+                            return response()->json([
+                                'success' => true,
+                                'message' => 'Delete data success',
+                            ]);
+                        }
+                        //akhir logic plt = kosong
+    
+                        Assignment::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+                        Backup::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+    
+                        Assignment::where('head_officer', $id)->update([
+                            "head_officer_status" => "non-active",
+                            "head_officer" => 0
+                        ]);
+                        Backup::where('head_officer', $id)->update([
+                            "head_officer_status" => "non-active",
+                            "head_officer" => 0
+                        ]);
+        
+                        Assignment::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        Backup::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        $employee->delete();
+                        $assignment->delete();
+            
+                        return response()->json([
+                            'success' => true,
+                            'message' => 'Delete data success',
+                        ]);
+                    }
+                    //akhir logic !empty($ppk_id)
+    
+                    if ($ho_id->plt == "kosong") {
+                        //untuk head_office default
+                        $userHO_byid = User::where('id', '=', $id)->first();
+                        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Data head_office tidak ada',
+                            ], 410);
+                        }
+    
+                        $employee->delete();
+                        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                        ->first();
+    
                         Assignment::where('ppk', $id)->update([
                             "ppk_status" => "non-active",
                             "ppk" => 0
@@ -430,16 +998,7 @@ class EmployeeController extends Controller
                         ]);
                     }
                     //akhir logic plt = kosong
-
-                    Assignment::where('ppk', $id)->update([
-                        "ppk_status" => "non-active",
-                        "ppk" => 0
-                    ]);
-                    Backup::where('ppk', $id)->update([
-                        "ppk_status" => "non-active",
-                        "ppk" => 0
-                    ]);
-
+    
                     Assignment::where('head_officer', $id)->update([
                         "head_officer_status" => "non-active",
                         "head_officer" => 0
@@ -447,6 +1006,38 @@ class EmployeeController extends Controller
                     Backup::where('head_officer', $id)->update([
                         "head_officer_status" => "non-active",
                         "head_officer" => 0
+                    ]);
+    
+                    Assignment::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    Backup::where('user_id', $id)->update([
+                        "employee_status" => "blank",
+                        "availability_status" => "not_yet",
+                        "user_id" => 0
+                    ]);
+        
+                    $employee->delete();
+                    $assignment->delete();
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic !empty($ho_id)
+    
+                if (!empty($ppk_id)) {
+                    Assignment::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    Backup::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
                     ]);
     
                     Assignment::where('user_id', $id)->update([
@@ -470,21 +1061,99 @@ class EmployeeController extends Controller
                     ]);
                 }
                 //akhir logic !empty($ppk_id)
-
-                if ($ho_id->plt == "kosong") {
-                    $employee->delete();
-
-                    //untuk head_office default
-                    $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
-                    ->first();
-
-                    if (empty($head_office)) {
+    
+                Assignment::where('user_id', $id)->update([
+                    "employee_status" => "blank",
+                    "availability_status" => "not_yet",
+                    "user_id" => 0
+                ]);
+    
+                Backup::where('user_id', $id)->update([
+                    "employee_status" => "blank",
+                    "availability_status" => "not_yet",
+                    "user_id" => 0
+                ]);
+    
+                $employee->delete();
+                $assignment->delete();
+    
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Delete data success',
+                ]);
+            }
+            //akhir logic empty($employee_id)
+    
+            if (empty($ho_id)) {
+                DB::table('assignments')->where('head_officer', $id)->update([
+                    "head_officer_status" => "active",
+                ]);
+                DB::table('backups')->where('head_officer', $id)->update([
+                    "head_officer_status" => "active",
+                ]);
+            } else {
+                if (!empty($ppk_id)) {
+                    if ($ho_id->plt == "kosong") {
+                        //untuk head_office default
+                        $userHO_byid = User::where('id', '=', $id)->first();
+                        $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Data head_office tidak ada',
+                            ], 410);
+                        }
+    
+                        $employee->delete();
+                        $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                        ->first();
+    
+                        Assignment::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+                        Backup::where('ppk', $id)->update([
+                            "ppk_status" => "non-active",
+                            "ppk" => 0
+                        ]);
+    
+                        Assignment::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+                        Backup::where('head_officer', $id)->update([
+                            "head_officer_status" => "active",
+                            "head_officer" => $head_office->id,
+                            "nama_pej" => $head_office->name,
+                            "plt" => "kosong",
+                            "plh" => " "
+                        ]);
+        
+                        Assignment::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        Backup::where('user_id', $id)->update([
+                            "employee_status" => "blank",
+                            "availability_status" => "not_yet",
+                            "user_id" => 0
+                        ]);
+            
+                        $assignment->delete();
+            
                         return response()->json([
-                            'success' => false,
-                            'message' => 'Data head_office tidak ada',
-                        ], 410);
+                            'success' => true,
+                            'message' => 'Delete data success',
+                        ]);
                     }
-
+                    //akhir logic plt = kosong
+    
                     Assignment::where('ppk', $id)->update([
                         "ppk_status" => "non-active",
                         "ppk" => 0
@@ -493,7 +1162,50 @@ class EmployeeController extends Controller
                         "ppk_status" => "non-active",
                         "ppk" => 0
                     ]);
-
+                    
+                    DB::table('assignments')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+                    DB::table('backups')->where('head_officer', $id)->update([
+                        "head_officer_status" => "non-active",
+                        "head_officer" => 0
+                    ]);
+        
+                    $employee->delete();
+        
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Delete data success',
+                    ]);
+                }
+                //akhir logic !empty($ppk_id)
+    
+                if ($ho_id->plt == "kosong") {
+                    //untuk head_office default
+                    $userHO_byid = User::where('id', '=', $id)->first();
+                    $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+    
+                    if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Data head_office tidak ada',
+                        ], 410);
+                    }
+    
+                    $employee->delete();
+                    $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
+                    ->first();
+    
+                    Assignment::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+                    Backup::where('ppk', $id)->update([
+                        "ppk_status" => "non-active",
+                        "ppk" => 0
+                    ]);
+    
                     Assignment::where('head_officer', $id)->update([
                         "head_officer_status" => "active",
                         "head_officer" => $head_office->id,
@@ -529,169 +1241,7 @@ class EmployeeController extends Controller
                     ]);
                 }
                 //akhir logic plt = kosong
-
-                Assignment::where('head_officer', $id)->update([
-                    "head_officer_status" => "non-active",
-                    "head_officer" => 0
-                ]);
-                Backup::where('head_officer', $id)->update([
-                    "head_officer_status" => "non-active",
-                    "head_officer" => 0
-                ]);
-
-                Assignment::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
     
-                Backup::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
-    
-                $employee->delete();
-                $assignment->delete();
-    
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Delete data success',
-                ]);
-            }
-            //akhir logic !empty($ho_id)
-
-            if (!empty($ppk_id)) {
-                Assignment::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-                Backup::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-
-                Assignment::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
-    
-                Backup::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
-    
-                $employee->delete();
-                $assignment->delete();
-    
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Delete data success',
-                ]);
-            }
-            //akhir logic !empty($ppk_id)
-
-            Assignment::where('user_id', $id)->update([
-                "employee_status" => "blank",
-                "availability_status" => "not_yet",
-                "user_id" => 0
-            ]);
-
-            Backup::where('user_id', $id)->update([
-                "employee_status" => "blank",
-                "availability_status" => "not_yet",
-                "user_id" => 0
-            ]);
-
-            $employee->delete();
-            $assignment->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Delete data success',
-            ]);
-        }
-        //akhir logic empty($employee_id)
-
-        if (empty($ho_id)) {
-            DB::table('assignments')->where('head_officer', $id)->update([
-                "head_officer_status" => "active",
-            ]);
-            DB::table('backups')->where('head_officer', $id)->update([
-                "head_officer_status" => "active",
-            ]);
-        } else {
-            if (!empty($ppk_id)) {
-                if ($ho_id->plt == "kosong") {
-                    $employee->delete();
-
-                    //untuk head_office default
-                    $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
-                    ->first();
-
-                    if (empty($head_office)) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Data head_office tidak ada',
-                        ], 410);
-                    }
-
-                    Assignment::where('ppk', $id)->update([
-                        "ppk_status" => "non-active",
-                        "ppk" => 0
-                    ]);
-                    Backup::where('ppk', $id)->update([
-                        "ppk_status" => "non-active",
-                        "ppk" => 0
-                    ]);
-
-                    Assignment::where('head_officer', $id)->update([
-                        "head_officer_status" => "active",
-                        "head_officer" => $head_office->id,
-                        "nama_pej" => $head_office->name,
-                        "plt" => "kosong",
-                        "plh" => " "
-                    ]);
-                    Backup::where('head_officer', $id)->update([
-                        "head_officer_status" => "active",
-                        "head_officer" => $head_office->id,
-                        "nama_pej" => $head_office->name,
-                        "plt" => "kosong",
-                        "plh" => " "
-                    ]);
-    
-                    Assignment::where('user_id', $id)->update([
-                        "employee_status" => "blank",
-                        "availability_status" => "not_yet",
-                        "user_id" => 0
-                    ]);
-        
-                    Backup::where('user_id', $id)->update([
-                        "employee_status" => "blank",
-                        "availability_status" => "not_yet",
-                        "user_id" => 0
-                    ]);
-        
-                    $assignment->delete();
-        
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Delete data success',
-                    ]);
-                }
-                //akhir logic plt = kosong
-
-                Assignment::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-                Backup::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-                
                 DB::table('assignments')->where('head_officer', $id)->update([
                     "head_officer_status" => "non-active",
                     "head_officer" => 0
@@ -708,112 +1258,35 @@ class EmployeeController extends Controller
                     'message' => 'Delete data success',
                 ]);
             }
-            //akhir logic !empty($ppk_id)
-
-            if ($ho_id->plt == "kosong") {
+            //akhir logic empty($ho_id)
+            
+            if (empty($ppk_id)) {
+                DB::table('assignments')->where('ppk', $id)->update([
+                    "ppk_status" => "active",
+                ]);
+                DB::table('backups')->where('ppk', $id)->update([
+                    "ppk_status" => "active",
+                ]);
+            } else {
+                DB::table('assignments')->where('ppk', $id)->update([
+                    "ppk_status" => "non-active",
+                    "ppk" => 0
+                ]);
+                DB::table('backups')->where('ppk', $id)->update([
+                    "ppk_status" => "non-active",
+                    "ppk" => 0
+                ]);
+    
                 $employee->delete();
-
-                //untuk head_office default
-                $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
-                ->first();
-
-                if (empty($head_office)) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Data head_office tidak ada',
-                    ], 410);
-                }
-
-                Assignment::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-                Backup::where('ppk', $id)->update([
-                    "ppk_status" => "non-active",
-                    "ppk" => 0
-                ]);
-
-                Assignment::where('head_officer', $id)->update([
-                    "head_officer_status" => "active",
-                    "head_officer" => $head_office->id,
-                    "nama_pej" => $head_office->name,
-                    "plt" => "kosong",
-                    "plh" => " "
-                ]);
-                Backup::where('head_officer', $id)->update([
-                    "head_officer_status" => "active",
-                    "head_officer" => $head_office->id,
-                    "nama_pej" => $head_office->name,
-                    "plt" => "kosong",
-                    "plh" => " "
-                ]);
-
-                Assignment::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
-    
-                Backup::where('user_id', $id)->update([
-                    "employee_status" => "blank",
-                    "availability_status" => "not_yet",
-                    "user_id" => 0
-                ]);
-    
-                $assignment->delete();
     
                 return response()->json([
                     'success' => true,
                     'message' => 'Delete data success',
                 ]);
             }
-            //akhir logic plt = kosong
-
-            DB::table('assignments')->where('head_officer', $id)->update([
-                "head_officer_status" => "non-active",
-                "head_officer" => 0
-            ]);
-            DB::table('backups')->where('head_officer', $id)->update([
-                "head_officer_status" => "non-active",
-                "head_officer" => 0
-            ]);
-
-            $employee->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Delete data success',
-            ]);
+            //akhir logic empty($ppk_id)
         }
-        //akhir logic empty($ho_id)
-        
-        if (empty($ppk_id)) {
-            DB::table('assignments')->where('ppk', $id)->update([
-                "ppk_status" => "active",
-            ]);
-            DB::table('backups')->where('ppk', $id)->update([
-                "ppk_status" => "active",
-            ]);
-        } else {
-            DB::table('assignments')->where('ppk', $id)->update([
-                "ppk_status" => "non-active",
-                "ppk" => 0
-            ]);
-            DB::table('backups')->where('ppk', $id)->update([
-                "ppk_status" => "non-active",
-                "ppk" => 0
-            ]);
-
-            $employee->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Delete data success',
-            ]);
-        }
-        //akhir logic empty($ppk_id)
-        
-        
+        //akhir logic empty(assignment)
     }
 
     public function importView(Request $request){
