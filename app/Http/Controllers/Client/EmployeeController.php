@@ -361,7 +361,26 @@ class EmployeeController extends Controller
         $backup = Backup::where('user_id', $id)->first();
         $assignment = Assignment::where('user_id', $id)->first();
 
+        
+        
         if (empty($assignment)) {
+            $userHO_byid = User::where('id', '=', $id)->first();
+            $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
+        
+            if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data head_office tidak ada',
+                ], 410);
+            }
+
+            $employee->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Delete data success',
+            ]);
+
             if (empty($employee_id)) {
                 Assignment::where('user_id', $id)->update([
                     "employee_status" => "core",
