@@ -392,13 +392,6 @@ class EmployeeController extends Controller
                     ], 410);
                 }
 
-                // $employee->delete();
-
-                // return response()->json([
-                //     'success' => true,
-                //     'message' => 'Delete data success',
-                // ]);
-
                 if (!empty($ho_id)) {
                     if (!empty($ppk_id)) {
                         if ($ho_id->plt == "kosong") {
@@ -609,7 +602,9 @@ class EmployeeController extends Controller
                                 ], 410);
                             }
     
+                            //untuk menghapus user_id
                             $employee->delete();
+
                             $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
                             ->first();
     
@@ -648,8 +643,9 @@ class EmployeeController extends Controller
                                 "availability_status" => "not_yet",
                                 "user_id" => 0
                             ]);
-                
-        
+
+                            //untuk menghapus assignment dengan user_id
+                            $employee_id->delete();
                 
                             return response()->json([
                                 'success' => true,
@@ -688,9 +684,11 @@ class EmployeeController extends Controller
                             "user_id" => 0
                         ]);
             
+                        //untuk menghapus assignment dengan user_id
+                        $employee_id->delete();
+                        //untuk menghapus user_id
                         $employee->delete();
-    
-            
+
                         return response()->json([
                             'success' => true,
                             'message' => 'Delete data success',
@@ -710,7 +708,9 @@ class EmployeeController extends Controller
                             ], 410);
                         }
     
+                        //untuk menghapus user_id
                         $employee->delete();
+
                         $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
                         ->first();
     
@@ -749,8 +749,9 @@ class EmployeeController extends Controller
                             "availability_status" => "not_yet",
                             "user_id" => 0
                         ]);
-            
-    
+
+                        //untuk menghapus assignment dengan user_id
+                        $employee_id->delete();
             
                         return response()->json([
                             'success' => true,
@@ -780,8 +781,10 @@ class EmployeeController extends Controller
                         "user_id" => 0
                     ]);
         
+                    //untuk menghapus assignment dengan user_id
+                    $employee_id->delete();
+                    //untuk menghapus user_id
                     $employee->delete();
-
         
                     return response()->json([
                         'success' => true,
@@ -812,6 +815,9 @@ class EmployeeController extends Controller
                         "user_id" => 0
                     ]);
         
+                    //untuk menghapus assignment dengan user_id
+                    $employee_id->delete();
+                    //untuk menghapus user_id
                     $employee->delete();
 
         
@@ -834,6 +840,9 @@ class EmployeeController extends Controller
                     "user_id" => 0
                 ]);
     
+                //untuk menghapus assignment dengan user_id
+                $employee_id->delete();
+                //untuk menghapus user_id
                 $employee->delete();
     
                 return response()->json([
@@ -864,7 +873,9 @@ class EmployeeController extends Controller
                             ], 410);
                         }
     
+                        //untuk menghapus user_id
                         $employee->delete();
+
                         $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
                         ->first();
     
@@ -904,7 +915,8 @@ class EmployeeController extends Controller
                             "user_id" => 0
                         ]);
             
-    
+                        //untuk menghapus assignment dengan user_id
+                        $employee_id->delete();
             
                         return response()->json([
                             'success' => true,
@@ -931,6 +943,9 @@ class EmployeeController extends Controller
                         "head_officer" => 0
                     ]);
         
+                    //untuk menghapus assignment dengan user_id
+                    $employee_id->delete();
+                    //untuk menghapus user_id
                     $employee->delete();
         
                     return response()->json([
@@ -952,7 +967,9 @@ class EmployeeController extends Controller
                         ], 410);
                     }
     
+                    //untuk menghapus user_id
                     $employee->delete();
+
                     $head_office = User::where('position', '=', 'Kepala KPPBC TMC Kudus')
                     ->first();
     
@@ -992,7 +1009,8 @@ class EmployeeController extends Controller
                         "user_id" => 0
                     ]);
         
-
+                    //untuk menghapus assignment dengan user_id
+                    $employee_id->delete();
         
                     return response()->json([
                         'success' => true,
@@ -1036,6 +1054,9 @@ class EmployeeController extends Controller
                     "ppk" => 0
                 ]);
     
+                //untuk menghapus assignment dengan user_id
+                $employee_id->delete();
+                //untuk menghapus user_id
                 $employee->delete();
     
                 return response()->json([
