@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            // AssignmentSeeder::class,
-            // BackupSeeder::class,
+            AssignmentSeeder::class,
+            BackupSeeder::class,
             // UnitSeeder::class,
             // TransportationSeeder::class,
          ]);
