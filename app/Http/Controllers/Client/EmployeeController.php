@@ -161,7 +161,7 @@ class EmployeeController extends Controller
         $userHO_byid = User::where('id', '=', $id)->first();
         $countHO = User::where('position', '=', 'Kepala KPPBC TMC Kudus')->count();
 
-        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1) {
+        if ($userHO_byid->position == "Kepala KPPBC TMC Kudus" && $countHO == 1 && $request->position != "Kepala KPPBC TMC Kudus") {
             return response()->json([
                 'message' => 'failed',
                 'errors' => 'Pejabat Kepala Kantor Tidak Tersedia!!',
